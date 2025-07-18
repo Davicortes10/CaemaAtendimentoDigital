@@ -42,8 +42,7 @@ O **Atendimento Digital CAEMA** é um sistema web desenvolvido para a Companhia 
 ### 1. Clonar o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/atendimento-digital-caema.git
-cd atendimento-digital-caema
+git clone https://github.com/Davicortes10/CaemaAtendimentoDigital.git
 ```
 
 ### 2. Criar uma Nova Branch
@@ -56,7 +55,15 @@ git checkout -b nome-da-sua-branch
 
 Substitua `nome-da-sua-branch` por um nome descritivo relacionado à funcionalidade que você está desenvolvendo (ex: `feature/autenticacao`, `fix/relatorios`).
 
-### 3. Fazer Commits das Alterações
+### 3. Sincronizar com o Repositório Remoto (Pull)
+
+Antes de começar a trabalhar, sempre atualize sua branch com as últimas alterações do repositório principal:
+
+```bash
+git pull origin main
+```
+
+### 4. Fazer Commits das Alterações
 
 Após fazer suas alterações, adicione os arquivos modificados e faça um commit:
 
@@ -65,7 +72,7 @@ git add arquivo-modificado
 git commit -m "Descrição clara e concisa das alterações realizadas"
 ```
 
-### 4. Enviar as Alterações (Push)
+### 5. Enviar as Alterações (Push)
 
 Envie sua branch para o repositório remoto:
 
@@ -73,9 +80,18 @@ Envie sua branch para o repositório remoto:
 git push origin nome-da-sua-branch
 ```
 
-### 5. Abrir um Pull Request
+### 6. Abrir um Pull Request
 
 Acesse o repositório no GitHub e crie um novo Pull Request para que suas alterações sejam revisadas e incorporadas ao projeto principal.
+
+## Fluxo Recomendado de Trabalho
+
+1. Sempre comece com `git pull` para atualizar seu ambiente local
+2. Crie uma branch específica para cada tarefa/feature
+3. Faça commits atômicos (uma mudança lógica por commit)
+4. Escreva mensagens de commit claras e descritivas
+5. Teste suas alterações localmente antes de enviar
+6. Envie (push) apenas quando sua feature estiver completa
 
 ## Contato
 
