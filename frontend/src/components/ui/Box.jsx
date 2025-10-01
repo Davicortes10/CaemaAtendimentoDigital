@@ -1,12 +1,26 @@
 import React from "react";
 
-const Box = ({label, onclick}) => {
-    const baseClasses = "bg-white hover:bg-zinc-200 text-sky-950 size-60 w-65 rounded-2xl text-2xl font-semibold mt-5 {className}" 
+const Box = ({ label, onClick, className = '' }) => {
+    
+    const baseClasses = `
+        bg-white 
+        hover:bg-zinc-200 
+        text-sky-950 
+        w-64 h-64 
+        rounded-2xl 
+        text-2xl 
+        font-semibold 
+        mt-2
+    `; 
+    
     return (
         <div className="flex flex-col justify-center items-center">
-        <button onclick={onclick} className={baseClasses}>
-            {label}
-        </button>
+            <button 
+                onClick={onClick} 
+                className={`${baseClasses} ${className}`}
+            >
+                {label}
+            </button>
         </div>
     );
 };

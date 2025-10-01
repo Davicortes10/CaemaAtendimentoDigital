@@ -37,7 +37,7 @@ const Servicos = () => {
             onClick={() => {}}
         />
         <ButtonWhite
-            label={"Outros serviços"}
+            label={"Avançar"}
             onClick={() => {}}
         />
       </div>
