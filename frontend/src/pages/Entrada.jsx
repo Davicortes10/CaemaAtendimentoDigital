@@ -9,15 +9,29 @@ import Input from "../components/ui/Input";
 
 const Entrada = () => {
   const [inputValue, setInputValue] = useState('');
+  const [erro, setErro] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic Validacion and Navigation
-    if (inputValue.trim() === '') {
-        alert("Por favor, preencha sua Matrícula ou CPF.");
-    return;
-  }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setErro('');
+        if (inputValue.trim() === '') {
+            setErro("Por favor, preencha sua Matrícula ou CPF.");
+            return;
+        }
+
+        // Validação de Somente Números (Segurança final)
+        if (!/^\d+$/.test(inputValue)) {
+            setErro("O campo deve conter apenas números."); 
+            return;
+        }
+        
+        // Validação de Tamanho 
+        if (inputValue.length < 11) {
+            setErro("A Matrícula/CPF deve ter pelo menos 11 dígitos.");
+            return;
+        }
+    
   // Navigate to Loading page
   navigate('/loading'); 
     };
@@ -37,6 +51,7 @@ const Entrada = () => {
             placeholder= "Ex: 12345678"
             value = {inputValue}
             onChange = {(e) => setInputValue(e.target.value)}
+            isNumeric={true} 
           />
           <Button 
             label={"Avançar"}

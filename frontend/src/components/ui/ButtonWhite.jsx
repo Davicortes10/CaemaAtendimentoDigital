@@ -7,7 +7,7 @@ const ButtonWhite = ({label, onClick, className = '' , IconComponent}) => {
         text-sky-900 
         h-12 w-64 
         rounded-4xl 
-        text-2xl 
+        text-2xl
         font-semibold 
         mt-2
         flex flex-row items-center justify-center
