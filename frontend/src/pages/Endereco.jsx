@@ -4,6 +4,8 @@ import Logo from '../components/ui/Logo';
 import Box from '../components/ui/Box';
 import ButtonWhite from '../components/ui/ButtonWhite';
 
+import { FaHome } from "react-icons/fa"; 
+import {FaRightToBracket} from "react-icons/fa6";
 
 const Endereco = () => {
   return (
@@ -19,25 +21,24 @@ const Endereco = () => {
       </div>
       <div className='flex flex-row w-full justify-between px-64'>
         <Box 
+            IconComponent={FaHome}
             className = "w-80"
             label={"2ª Via da Conta"}
             onClick={() => {}}/>
         <Box 
+            IconComponent={FaHome}
             className = "w-80"
             label={"Informar Falta de Água"}
             onClick={() => {}}/>
         <Box 
+            IconComponent={FaHome}
             className = "w-80"
             label={"Alterar Dados Cadastrais"}
             onClick={() => {}}/>
       </div>
-      <div className='flex flex-row w-full justify-between px-64'>
+      <div className='flex flex-row w-full justify-end px-64'>
         <ButtonWhite
-            className = "w-80"
-            label={"Voltar"}
-            onClick={() => {}}
-        />
-        <ButtonWhite
+            IconComponent={FaRightToBracket}
             className = "w-80"
             label={"Sair"}
             onClick={() => {}}

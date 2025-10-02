@@ -1,6 +1,6 @@
 import React from "react";
 
-const Box = ({ label, onClick, className = '' }) => {
+const Box = ({ label, onClick, className = '', IconComponent }) => {
     
     const baseClasses = `
         bg-white 
@@ -11,6 +11,7 @@ const Box = ({ label, onClick, className = '' }) => {
         text-2xl 
         font-semibold 
         mt-2
+        flex flex-col items-center justify-center 
     `; 
     
     return (
@@ -19,7 +20,10 @@ const Box = ({ label, onClick, className = '' }) => {
                 onClick={onClick} 
                 className={`${baseClasses} ${className}`}
             >
-                {label}
+                {IconComponent && ( 
+                    <IconComponent className="text-8xl text-sky-900 mb-4 mt-4"/>
+                )}
+                <span className="text-center">{label}</span> 
             </button>
         </div>
     );

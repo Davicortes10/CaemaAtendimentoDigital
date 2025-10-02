@@ -4,6 +4,10 @@ import Logo from '../components/ui/Logo';
 import Box from '../components/ui/Box';
 import ButtonWhite from '../components/ui/ButtonWhite';
 
+import { IoDocumentText } from "react-icons/io5";
+import { FaFaucet, FaUserPen, FaTriangleExclamation} from "react-icons/fa6";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight  } from "react-icons/fa";
+
 
 const Servicos = () => {
   return (
@@ -19,24 +23,30 @@ const Servicos = () => {
       </div>
       <div className='flex flex-row w-full justify-between px-40'>
         <Box 
+            IconComponent={IoDocumentText}
             label={"2ª Via da Conta"}
             onClick={() => {}}/>
         <Box 
+            IconComponent={FaFaucet}
             label={"Informar Falta de Água"}
             onClick={() => {}}/>
         <Box 
+            IconComponent={FaUserPen}
             label={"Alterar Dados Cadastrais"}
             onClick={() => {}}/>
         <Box 
+            IconComponent={FaTriangleExclamation}
             label={"Comunicar Vazamento"}
             onClick={() => {}}/>
       </div>
       <div className='flex flex-row w-full justify-between px-40'>
         <ButtonWhite
+            IconComponent={FaArrowAltCircleLeft}
             label={"Voltar"}
             onClick={() => {}}
         />
         <ButtonWhite
+            IconComponent={FaArrowAltCircleRight}
             label={"Avançar"}
             onClick={() => {}}
         />
