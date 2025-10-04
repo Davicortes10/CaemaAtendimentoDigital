@@ -56,7 +56,7 @@ const Endereco = () => {
               key={item.id}
               IconComponent={FaHome}
               className = "w-80 text-xl"
-              label={`${item.endereco} | Matrícula: ${item.matricula}`}
+              label={`${item.endereco}  Matrícula: ${item.matricula}`}
               onClick={() => handleSelectAddress(item.id)}/>
           ))}
       </div>

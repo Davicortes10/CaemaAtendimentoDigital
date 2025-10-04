@@ -6,7 +6,7 @@ const Logo = () => {
         <div className="pt-20 mb-12 flex justify-center">
             <img src={caemaLogo} 
             alt="Logo CAEMA" 
-            className="w-md h-auto"
+            className="w-sm h-auto"
             />
         </div>
     );

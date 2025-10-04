@@ -32,8 +32,8 @@ const Entrada = () => {
             return;
         }
     
-  // Navigate to Loading page
-  navigate('/loading'); 
+        // Navigate to Loading page
+        navigate('/loading'); 
     };
 
   return (
