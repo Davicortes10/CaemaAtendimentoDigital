@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Logo from '../components/ui/Logo';
 import Box from '../components/ui/Box';
@@ -10,6 +11,11 @@ import { FaArrowAltCircleLeft, FaArrowAltCircleRight  } from "react-icons/fa";
 
 
 const Servicos = () => {
+  const navigate = useNavigate();
+  const handleSelectFatura = () => {
+    navigate('/fatura');
+  };
+
   return (
     <Layout>
       <Logo />
@@ -25,7 +31,7 @@ const Servicos = () => {
         <Box 
             IconComponent={IoDocumentText}
             label={"2ª Via da Conta"}
-            onClick={() => {}}/>
+            onClick={handleSelectFatura}/>
         <Box 
             IconComponent={FaFaucet}
             label={"Informar Falta de Água"}

@@ -7,6 +7,7 @@ import Entrada from "./pages/Entrada";
 import Loading from "./pages/Loading"; 
 import Endereco from "./pages/Endereco"; 
 import Servicos from './pages/Servicos';
+import Fatura from './pages/Fatura';
 
 function App() {
   
@@ -28,7 +29,10 @@ function App() {
         
         {/* Rota 5: Tela de Serviços (A ser criada em breve) */}
         <Route path="/servicos" element={<Servicos />} /> 
-        
+
+        {/* Rota 5: Tela de Fatura (A ser criada em breve) */}
+        <Route path="/fatura" element={<Fatura />} />
+
         {/* Fallback: Qualquer URL não mapeada volta para a Entrada */}
         <Route path="*" element={<Navigate to="/" replace />} />
         
