@@ -6,7 +6,7 @@ const Layout = ({ children }) => {
     const backgroundClass = "[background-image:linear-gradient(to_bottom,#014888_84%,#0F70CE_100%)]";
     
     return (
-        <div className={`min-h-screen flex flex-col items-center ${backgroundClass}`}>
+        <div className={`min-h-screen flex flex-col items-center pt-10 w-full ${backgroundClass}`}>
             
     
             {children}

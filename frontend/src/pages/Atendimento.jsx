@@ -17,15 +17,15 @@ const Atendimento = () => {
             <h2 className="text-white text-5xl font-semibold pt-1 pb-7">
                 Escolha uma opção
             </h2>
-            <div className="flex flex-row w-full justify-between px-96">
+            <div className="flex flex-row w-1/2 justify-between px-20">
                 <Box
-                    className = "w-90 text-4xl"
+                    className = "py-24 text-4xl"
                     label={"Atendimento Normal"}
                     onClick={handleSelectAtendimento}
                 />
                 
                 <Box
-                    className = "w-90 text-4xl"
+                    className = "py-24 text-4xl"
                     label={"Atendimento Preferencial"}
                     onClick={() => {}}
                 />

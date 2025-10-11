@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
+import User from '../components/ui/User';
 import Logo from '../components/ui/Logo';
 import Box from '../components/ui/Box';
 import ButtonWhite from '../components/ui/ButtonWhite';
 
-import { FaHome } from "react-icons/fa"; 
+import { FaHome, FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa"; 
 import {FaRightToBracket} from "react-icons/fa6";
 
 
@@ -45,25 +46,35 @@ const Endereco = () => {
       <h2 className='text-white text-5xl font-semibold pt-1'>
         Selecione um Endereco para atendimento
       </h2>
-      <div className='flex flex-row w-full justify-between px-64 mt-4 opacity-60'>
-        <h3 className='text-white text-2xl font-semibold'>
-          Olá, Wesley Morais
-        </h3>
-      </div>
-      <div className='flex flex-row w-full justify-between px-64'>
+      <User />
+      <div className='flex flex-row w-full justify-between px-70'>
         {enderecos.map((item) => (
             <Box 
+              className='py-10 text-xl'
               key={item.id}
               IconComponent={FaHome}
-              className = "w-80 text-xl"
               label={`${item.endereco}  Matrícula: ${item.matricula}`}
               onClick={() => handleSelectAddress(item.id)}/>
           ))}
       </div>
-      <div className='flex flex-row w-full justify-end px-64'>
+      <div className='flex flex-row w-full justify-between px-70'>
         <ButtonWhite
+            className='text-xl'
+            IconComponent={FaArrowAltCircleLeft}
+            label={"Voltar"}
+            onClick={() => {}}
+        />
+        <ButtonWhite
+            className='text-xl'
+            IconComponent={FaArrowAltCircleRight}
+            label={"Avançar"}
+            onClick={() => {}}
+        />
+      </div>
+      <div className='flex flex-row w-full justify-center px-70'>
+        <ButtonWhite
+            className='text-xl'
             IconComponent={FaRightToBracket}
-            className = "w-80"
             label={"Sair"}
             onClick={handleSair}
         />

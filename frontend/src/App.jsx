@@ -8,6 +8,8 @@ import Loading from "./pages/Loading";
 import Endereco from "./pages/Endereco"; 
 import Servicos from './pages/Servicos';
 import Fatura from './pages/Fatura';
+import AlterCad from './pages/AlterCad';
+import InfFaltaWater from './pages/InfFaltaWater';
 
 function App() {
   
@@ -32,6 +34,12 @@ function App() {
 
         {/* Rota 5: Tela de Fatura (A ser criada em breve) */}
         <Route path="/fatura" element={<Fatura />} />
+
+        {/* Rota 6: Tela de edição de dados (A ser criada em breve) */}
+        <Route path="/alterCad" element={<AlterCad/>} />
+
+        {/* Rota 7: Tela de Alerta de falta de água (A ser criada em breve) */}
+        <Route path="/infFaltaWater" element={<InfFaltaWater/>} />
 
         {/* Fallback: Qualquer URL não mapeada volta para a Entrada */}
         <Route path="*" element={<Navigate to="/" replace />} />
