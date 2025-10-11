@@ -22,6 +22,15 @@ const Endereco = () => {
     // 💡 Dados Receiver
     const [enderecos, setEnderecos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [protocolo, setProtocolo] = useState(null);
+
+    // 💡 Recupera protocolo do localStorage
+    useEffect(() => {
+        const protocoloSalvo = localStorage.getItem('protocoloAtendimento');
+        if (protocoloSalvo) {
+            setProtocolo(protocoloSalvo);
+        }
+    }, []);
 
     // 💡 Api Simulação
     useEffect(() => {
@@ -79,6 +88,15 @@ const Endereco = () => {
             onClick={handleSair}
         />
       </div>
+      
+      {protocolo && (
+        <div className="fixed bottom-4 right-4 bg-white bg-opacity-95 rounded-lg p-4 shadow-lg max-w-xs border-2 border-blue-300">
+          <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
+          <p className="text-blue-700 text-base font-mono bg-blue-50 p-2 rounded border text-center font-bold">
+            {protocolo}
+          </p>
+        </div>
+      )}
     </Layout>
   );
 };
