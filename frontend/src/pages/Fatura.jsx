@@ -1,233 +1,111 @@
-import React, { useState, useRef } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import React, { useState, useEffect } from "react";
+import Logo from "../components/ui/Logo";
 
-const Fatura = () => {
-  const [dados, setDados] = useState({
-    cliente: "Sérgio Murilo Frazão",
-    endereco: "Rua das Flores, 123 - Centro, São Paulo/SP",
-    servico: "Manutenção de Sistema Abastecimento de Água",
-    data: "06/10/2025",
-    itens: [
-      { descricao: "Troca de chave", quantidade: 2, valor: 80 },
-      { descricao: "Instalação de torneira", quantidade: 5, valor: 25 },
-      { descricao: "Mão de obra", quantidade: 1, valor: 150 },
-    ],
-  });
+const CardFaturas = () => {
+  const [protocolo, setProtocolo] = useState(null);
+  const [faturas] = useState([
+    {
+      mes: "Janeiro",
+      data: "10/01/2025",
+      valor: 350.0,
+      status: "Pago",
+    },
+    {
+      mes: "Fevereiro",
+      data: "10/02/2025",
+      valor: 420.5,
+      status: "Pendente",
+    },
+    {
+      mes: "Março",
+      data: "10/03/2025",
+      valor: 290.75,
+      status: "Não pago",
+    },
+    {
+      mes: "Abril",
+      data: "10/04/2025",
+      valor: 380.0,
+      status: "Pago",
+    },
+    {
+      mes: "Maio",
+      data: "10/05/2025",
+      valor: 510.25,
+      status: "Pendente",
+    },
+  ]);
 
-  const faturaRef = useRef();
+  // 💡 Recupera protocolo do localStorage
+  useEffect(() => {
+    const protocoloSalvo = localStorage.getItem('protocoloAtendimento');
+    if (protocoloSalvo) {
+      setProtocolo(protocoloSalvo);
+    }
+  }, []);
 
-  // Atualiza campos do formulário
-  const handleChange = (e) => {
-    setDados({ ...dados, [e.target.name]: e.target.value });
-  };
-
-  // Atualiza itens
-  const handleItemChange = (index, campo, valor) => {
-    const novosItens = [...dados.itens];
-    novosItens[index][campo] = valor;
-    setDados({ ...dados, itens: novosItens });
-  };
-
-  // Adiciona novo item
-  const adicionarItem = () => {
-    setDados({
-      ...dados,
-      itens: [...dados.itens, { descricao: "", quantidade: 1, valor: 0 }],
-    });
-  };
-
-  // Remove item
-  const removerItem = (index) => {
-    const novosItens = dados.itens.filter((_, i) => i !== index);
-    setDados({ ...dados, itens: novosItens });
-  };
-
-  const valorTotal = dados.itens.reduce(
-    (acc, item) => acc + item.quantidade * item.valor,
-    0
-  );
-
-  // Gera PDF da fatura
-  const gerarPDF = async () => {
-    const element = faturaRef.current;
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const width = pdf.internal.pageSize.getWidth();
-    const height = (canvas.height * width) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, width, height);
-    pdf.save(`Fatura_${dados.cliente}.pdf`);
+  const corStatus = (status) => {
+    switch (status) {
+      case "Pago":
+        return "bg-green-100 text-green-700 border-green-400";
+      case "Pendente":
+        return "bg-yellow-100 text-yellow-700 border-yellow-400";
+      case "Não pago":
+        return "bg-red-100 text-red-700 border-red-400";
+      default:
+        return "bg-gray-100 text-gray-600 border-gray-300";
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
-        Sistema de Fatura Interativo
+    <div className="min-h-screen bg-blue-900 p-8">
+      <Logo />
+      <h1 className="text-3xl font-bold text-center text-white mb-6">
+        Faturas Mensais
       </h1>
 
-      {/* Formulário de Edição */}
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-blue-600">
-          Dados da Fatura
-        </h2>
-
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <input
-            name="cliente"
-            value={dados.cliente}
-            onChange={handleChange}
-            className="border rounded-lg p-2"
-            placeholder="Cliente"
-          />
-          <input
-            name="data"
-            value={dados.data}
-            onChange={handleChange}
-            className="border rounded-lg p-2"
-            placeholder="Data"
-          />
-          <input
-            name="servico"
-            value={dados.servico}
-            onChange={handleChange}
-            className="border rounded-lg p-2 col-span-2"
-            placeholder="Serviço"
-          />
-          <input
-            name="endereco"
-            value={dados.endereco}
-            onChange={handleChange}
-            className="border rounded-lg p-2 col-span-2"
-            placeholder="Endereço"
-          />
-        </div>
-
-        <h2 className="text-lg font-semibold mb-2 text-blue-600">
-          Itens da Fatura
-        </h2>
-
-        {dados.itens.map((item, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-4 gap-2 mb-2 items-center border-b pb-2"
-          >
-            <input
-              value={item.descricao}
-              onChange={(e) =>
-                handleItemChange(index, "descricao", e.target.value)
-              }
-              className="border rounded-lg p-2 col-span-2"
-              placeholder="Descrição"
-            />
-            <input
-              type="number"
-              value={item.quantidade}
-              onChange={(e) =>
-                handleItemChange(index, "quantidade", parseInt(e.target.value))
-              }
-              className="border rounded-lg p-2 text-center"
-              placeholder="Qtd"
-            />
-            <input
-              type="number"
-              value={item.valor}
-              onChange={(e) =>
-                handleItemChange(index, "valor", parseFloat(e.target.value))
-              }
-              className="border rounded-lg p-2 text-right"
-              placeholder="Valor"
-            />
-            <button
-              onClick={() => removerItem(index)}
-              className="text-red-600 hover:text-red-800 text-sm col-span-4 text-right"
+      <div className="overflow-x-auto pb-4">
+        <div className="flex gap-6 px-2 min-w-max justify-center">
+          {faturas.map((fatura, index) => (
+            <div
+              key={index}
+              className="min-w-[260px] bg-white shadow-lg rounded-2xl p-5 border border-gray-200 hover:shadow-xl transition-all duration-300"
             >
-              Remover
-            </button>
-          </div>
-        ))}
-
-        <button
-          onClick={adicionarItem}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-3 hover:bg-blue-600"
-        >
-          + Adicionar Item
-        </button>
-      </div>
-
-      {/* Fatura para Impressão */}
-      <div
-        ref={faturaRef}
-        className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-xl border border-gray-200"
-      >
-        <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">
-          Fatura de Serviço
-        </h2>
-
-        <p>
-          <strong>Cliente:</strong> {dados.cliente}
-        </p>
-        <p>
-          <strong>Endereço:</strong> {dados.endereco}
-        </p>
-        <p>
-          <strong>Serviço:</strong> {dados.servico}
-        </p>
-        <p className="mb-4">
-          <strong>Data:</strong> {dados.data}
-        </p>
-
-        <table className="w-full border-collapse border border-gray-300 mb-4">
-          <thead className="bg-blue-100">
-            <tr>
-              <th className="border border-gray-300 p-2 text-left">Descrição</th>
-              <th className="border border-gray-300 p-2 text-center">Qtd</th>
-              <th className="border border-gray-300 p-2 text-right">
-                Valor (R$)
-              </th>
-              <th className="border border-gray-300 p-2 text-right">
-                Total (R$)
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {dados.itens.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 p-2">{item.descricao}</td>
-                <td className="border border-gray-300 p-2 text-center">
-                  {item.quantidade}
-                </td>
-                <td className="border border-gray-300 p-2 text-right">
-                  {item.valor.toFixed(2)}
-                </td>
-                <td className="border border-gray-300 p-2 text-right">
-                  {(item.quantidade * item.valor).toFixed(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className="flex justify-end text-xl font-semibold text-blue-700">
-          Total: R$ {valorTotal.toFixed(2)}
-        </div>
-
-        <div className="text-center mt-6 text-gray-600">
-          <p>Obrigado pela preferência!</p>
-          <p>Contato: (11) 99999-9999 | email@empresa.com</p>
+              <div className="text-lg font-semibold text-blue-700 mb-2">
+                {fatura.mes} / 2025
+              </div>
+              <div className="text-gray-600 mb-1">
+                <strong>Data:</strong> {fatura.data}
+              </div>
+              <div className="text-gray-800 text-xl font-bold mb-2">
+                R$ {fatura.valor.toFixed(2)}
+              </div>
+              <div
+                className={`inline-block px-3 py-1 rounded-full border text-sm font-semibold ${corStatus(
+                  fatura.status
+                )}`}
+              >
+                {fatura.status}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="text-center mt-6">
-        <button
-          onClick={gerarPDF}
-          className="bg-green-600 text-white px-6 py-3 rounded-xl shadow hover:bg-green-700"
-        >
-          📄 Gerar PDF da Fatura
-        </button>
-      </div>
+      <p className="text-center text-blue-200 mt-6">
+        Role para o lado para ver as faturas dos outros meses →
+      </p>
+      
+      {protocolo && (
+        <div className="fixed bottom-4 right-4 bg-white bg-opacity-95 rounded-lg p-4 shadow-lg max-w-xs border-2 border-blue-300">
+          <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
+          <p className="text-blue-700 text-base font-mono bg-blue-50 p-2 rounded border text-center font-bold">
+            {protocolo}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Fatura;
+export default CardFaturas;

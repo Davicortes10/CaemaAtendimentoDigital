@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAtendimento } from "../context/AtendimentoContext"; 
 
@@ -25,15 +25,14 @@ const Atendimento = () => {
                     className = "py-24 text-4xl"
                     label={"Atendimento Normal"}
                     onClick={() => handleSelectAtendimento('Normal')}
+
                 />
-                
                 <Box
                     className = "py-24 text-4xl"
                     label={"Atendimento Preferencial"}
                     onClick={() => handleSelectAtendimento('Preferencial')}
                 />
             </div>
-
         </Layout>
     );
 }

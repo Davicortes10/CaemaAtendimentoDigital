@@ -86,6 +86,15 @@ const Entrada = () => {
             onClick={handleSolicitarMatricula}
             type="button"
         />
+        <div className="fixed bottom-4 right-4 px-4 bg-white bg-opacity-95 rounded-lg shadow-lg max-w-xs border-2 border-blue-300">
+          <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
+          <p className="text-blue-700 text-base font-mono bg-blue-50 p-2 rounded border text-center font-bold">
+            Variavel de protocolo aqui
+          </p>
+          <p className="text-blue-600 text-xs mt-2 text-center">
+            Guarde este número
+          </p>
+        </div>
     </Layout>
   );
 };
