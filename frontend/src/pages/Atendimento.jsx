@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useAtendimento } from "../context/AtendimentoContext"; 
 
 import Layout from "../components/layout/Layout";
 import Logo from "../components/ui/Logo";
@@ -8,7 +8,10 @@ import Box from "../components/ui/Box";
 
 const Atendimento = () => {
     const navigate = useNavigate();
-    const handleSelectAtendimento = () => {
+    const { setTipoAtendimento } = useAtendimento();
+
+    const handleSelectAtendimento = (tipo) => {
+        setTipoAtendimento(tipo);
         navigate('/entrada'); 
     };
     return (
@@ -21,13 +24,13 @@ const Atendimento = () => {
                 <Box
                     className = "py-24 text-4xl"
                     label={"Atendimento Normal"}
-                    onClick={handleSelectAtendimento}
+                    onClick={() => handleSelectAtendimento('Normal')}
                 />
                 
                 <Box
                     className = "py-24 text-4xl"
                     label={"Atendimento Preferencial"}
-                    onClick={() => {}}
+                    onClick={() => handleSelectAtendimento('Preferencial')}
                 />
             </div>
 

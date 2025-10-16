@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAtendimento } from "../context/AtendimentoContext"; 
 
 // Components
 import Layout from '../components/layout/Layout';
 import Logo from '../components/ui/Logo';
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import ButtonEntry from "../components/ui/ButtonEntry";
 
 const Entrada = () => {
   const [inputValue, setInputValue] = useState('');
   const [erro, setErro] = useState('');
   const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+  const { 
+    tipoAtendimento, 
+    setOrigemFluxo, 
+    setServicoEscolhido 
+  } = useAtendimento(); 
+
+  const handleSubmit = (e) => {
         e.preventDefault();
         setErro('');
         if (inputValue.trim() === '') {
@@ -31,10 +39,24 @@ const Entrada = () => {
             setErro("A Matrícula/CPF deve ter pelo menos 11 dígitos.");
             return;
         }
-    
+        setOrigemFluxo('Matricula/CPF Válido');
         // Navigate to Loading page
         navigate('/loading'); 
-    };
+  };
+
+  const handleSolicitarMatricula = () => {
+        setOrigemFluxo('Solicitar Matrícula');
+        setServicoEscolhido('Nova Matrícula/Cadastro Presencial');
+        const tipoLetra = tipoAtendimento === 'Preferencial' ? 'P' : 'N';
+
+        // Gerar número de senha aleatório (Exemplo simples) - API
+        const numeroSenha = tipoLetra + Math.floor(Math.random() * 900) + 100;
+        
+        const dadosParaSenha = {
+            numero: numeroSenha,
+        };
+        navigate('/senha', { state: dadosParaSenha });
+  };
 
   return (
     <Layout>
@@ -55,10 +77,15 @@ const Entrada = () => {
           />
           <Button 
             label={"Avançar"}
-            onClick={() => {}}
             type="submit"
           />
+          
         </form>
+        <ButtonEntry
+            label={"Não Possuo Matrícula"}
+            onClick={handleSolicitarMatricula}
+            type="button"
+        />
     </Layout>
   );
 };

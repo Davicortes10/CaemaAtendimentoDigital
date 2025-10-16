@@ -1,5 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
+import { useAtendimento } from '../context/AtendimentoContext'; 
 import Layout from '../components/layout/Layout';
 import User from '../components/ui/User';
 import Logo from '../components/ui/Logo';
@@ -10,27 +11,77 @@ import { IoDocumentText } from "react-icons/io5";
 import { FaFaucet, FaUserPen, FaTriangleExclamation, FaRightToBracket} from "react-icons/fa6";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight  } from "react-icons/fa";
 
+const servicesList = [
+    { 
+        label: "2ª Via da Conta", 
+        icon: IoDocumentText, 
+        isPresencial: false, // ONLINE (Segue a rota)
+        route: '/fatura' 
+    },
+    { 
+        label: "Informar Falta de Água", 
+        icon: FaFaucet, 
+        isPresencial: true, // PRESENCIAL (Gera Senha)
+        serviceName: "Informar Falta de Água"
+    },
+    { 
+        label: "Alterar Dados Cadastrais", 
+        icon: FaUserPen, 
+        isPresencial: true, // ONLINE
+        route: '/alterCad' 
+    },
+    
+];
 
 const Servicos = () => {
   const navigate = useNavigate();
-  const handleSelectFatura = () => {
-    navigate('/fatura');
-  };
+  const { 
+        tipoAtendimento, 
+        setOrigemFluxo, 
+        setServicoEscolhido,
+        limparSessao // Para o botão Sair
+    } = useAtendimento();
+    
+    // Ações para cada serviço
+  const handleServiceSelection = (service) => {
+        
+        
+    setServicoEscolhido(service.label);
+        
+        
+    if (service.isPresencial) {
+    // A. SERVIÇO PRESENCIAL (Gera Senha)
+            
+      setOrigemFluxo('SelecaoDeServico'); 
+            
+      // Determina a letra da senha (N=Normal, P=Preferencial)
+      const tipoLetra = tipoAtendimento === 'Preferencial' ? 'P' : 'N';
+      // Substituir por API no futuro
+      const numeroSenha = tipoLetra + Math.floor(Math.random() * 900) + 100;
 
-  const handleSelectAlterCad = () => {
-    navigate('/alterCad');
-  };
+      const dadosParaSenha = {
+        numero: numeroSenha,
+      };
 
-  const handleSelectInfFaltaWater = () => {
-    navigate('/infFaltaWater');
-  };
+      // Navega para a tela de Senha
+      navigate('/senha', { state: dadosParaSenha });
 
+    } else {
+      // B. SERVIÇO ONLINE (Navegação Direta)
+            
+      setOrigemFluxo('Online'); 
+            
+        // Navega para a rota online do serviço
+        navigate(service.route);
+    }
+  };
+    
+    
+    // Ação Sair (Limpa o Context e volta para a tela inicial)
   const handleSair = () => {
-        // Lógica para deslogar e voltar para a tela inicial/CPF
-        console.log("Ação: Sair/Logout");
-        navigate('/'); 
+      limparSessao(); // Limpa todas as variáveis da sessão no Context
+      navigate('/'); 
   };
-
   return (
     <Layout>
       <Logo />
@@ -39,21 +90,15 @@ const Servicos = () => {
       </h2>
       <User />
       <div className='flex flex-row w-full justify-between px-70'>
-        <Box 
-            className='text-2xl'
-            IconComponent={IoDocumentText}
-            label={"2ª Via da Conta"}
-            onClick={handleSelectFatura}/>
-        <Box 
-            className='text-2xl'
-            IconComponent={FaFaucet}
-            label={"Informar Falta de Água"}
-            onClick={handleSelectInfFaltaWater}/>
-        <Box 
-            className='text-2xl'
-            IconComponent={FaUserPen}
-            label={"Alterar Dados Cadastrais"}
-            onClick={handleSelectAlterCad}/>
+        {servicesList.map((service, index) => (
+                    <Box 
+                        key={index}
+                        className='text-2xl'
+                        IconComponent={service.icon}
+                        label={service.label}
+                        onClick={() => handleServiceSelection(service)}
+                    />
+          ))}
       </div>
       <div className='flex flex-row w-full justify-between px-70'>
         <ButtonWhite
