@@ -1,15 +1,12 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAtendimento } from '../context/AtendimentoContext'; 
-// Importar seus componentes
 import Layout from '../components/layout/Layout';
 import Logo from '../components/ui/Logo';
-import Box from '../components/ui/Box'; // Usando o Box como solicitado
 import Button from '../components/ui/Button'; 
 import ButtonWhite from '../components/ui/ButtonWhite'; 
-
-// Icons
 import { FaPrint, FaRegWindowClose } from 'react-icons/fa'; 
+import { QRCodeCanvas } from 'qrcode.react'; // Biblioteca do QR Code
 
 const Senha = () => {
     const navigate = useNavigate();
@@ -35,31 +32,48 @@ const Senha = () => {
         navigate('/');
     };
 
+    // 🌐 URL para o QR Code
+    const urlBase = "https://meusistema.com/senha"; // <-- altere para o domínio do seu sistema
+    const urlQRCode = `${urlBase}/${numeroSenha}`;
+
     return (
         <Layout>
             <Logo />
             <h2 className='text-white text-4xl font-semibold mt-1 mb-6'>
                 Sua senha foi gerada com sucesso!
             </h2>
+
             <div className='bg-white p-8 rounded-2xl shadow-2xl w-[600px] text-center'> 
-                
                 <p className='text-2xl text-gray-700 mb-2'>
                     Sua senha de atendimento é:
                 </p>
+
                 <h1 className='text-8xl font-extrabold text-blue-900 mb-6'>
                     {numeroSenha}
                 </h1>
-                
-                <div className='mt-6 text-xl text-gray-600 border-t pt-4'>
-                    <p>
-                        Tipo: {tipoAtendimento || 'Normal'}
-                    </p>
-                    <p>
-                        Motivo: {motivoAtendimento}
-                    </p>
+
+                {/* 🔵 QR CODE COM URL */}
+                <div className="flex justify-center mb-6">
+                    <QRCodeCanvas 
+                        value={urlQRCode}
+                        size={180}
+                        bgColor="#ffffff"
+                        fgColor="#1e3a8a"
+                        level="H"
+                        includeMargin={true}
+                    />
                 </div>
-                
+
+                <p className="text-sm text-gray-500 mb-4">
+                    Escaneie o QR Code para acessar sua senha online.
+                </p>
+
+                <div className='mt-6 text-xl text-gray-600 border-t pt-4'>
+                    <p>Tipo: {tipoAtendimento || 'Normal'}</p>
+                    <p>Motivo: {motivoAtendimento}</p>
+                </div>
             </div>
+
             <div className="flex flex-col items-center gap-3 w-[600px]">
                 <Button 
                     label="Imprimir Senha"
