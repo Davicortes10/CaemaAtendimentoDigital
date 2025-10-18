@@ -57,7 +57,7 @@ const Endereco = () => {
         Selecione um Endereco para atendimento
       </h2>
       <User />
-      <div className='flex flex-row w-full justify-between px-70'>
+      <div className='flex flex-wrap w-full justify-between px-70'>
         {matriculasDoCliente.map((item) => (
         <Box 
           className='py-10 text-xl'
