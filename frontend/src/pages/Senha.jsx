@@ -43,24 +43,24 @@ const Senha = () => {
                 Sua senha foi gerada com sucesso!
             </h2>
 
-            <div className='bg-white p-8 rounded-2xl shadow-2xl w-[600px] text-center'> 
-                <p className='text-2xl text-gray-700 mb-2'>
+            <div className='bg-white p-8 rounded-2xl shadow-2xl w-[500px] text-center'> 
+                <p className='text-2xl text-gray-700'>
                     Sua senha de atendimento é:
                 </p>
 
-                <h1 className='text-8xl font-extrabold text-blue-900 mb-6'>
+                <h1 className='text-6xl font-extrabold text-blue-900'>
                     {numeroSenha}
                 </h1>
 
                 {/* 🔵 QR CODE COM URL */}
-                <div className="flex justify-center mb-6">
+                <div className="flex justify-center">
                     <QRCodeCanvas 
                         value={urlQRCode}
-                        size={180}
+                        size={150}
                         bgColor="#ffffff"
                         fgColor="#1e3a8a"
                         level="H"
-                        includeMargin={true}
+                        marginSize={2}
                     />
                 </div>
 
@@ -68,15 +68,15 @@ const Senha = () => {
                     Escaneie o QR Code para acessar sua senha online.
                 </p>
 
-                <div className='mt-6 text-xl text-gray-600 border-t pt-4'>
+                <div className='mt-6 text-xl text-gray-600 border-t'>
                     <p>Tipo: {tipoAtendimento || 'Normal'}</p>
                     <p>Motivo: {motivoAtendimento}</p>
                 </div>
             </div>
 
-            <div className="flex flex-col items-center gap-3 w-[600px]">
-                <Button 
-                    label="Imprimir Senha"
+            <div className="flex flex-row justify-between gap-3 w-[600px]">
+                <ButtonWhite
+                    label="Imprimir"
                     IconComponent={FaPrint}
                     onClick={handleImprimir}
                     className="w-full text-2xl py-3" 
