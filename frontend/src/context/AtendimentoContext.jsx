@@ -10,10 +10,20 @@ export const AtendimentoProvider = ({ children }) => {
     const [origemFluxo, setOrigemFluxo] = useState(null); 
     const [servicoEscolhido, setServicoEscolhido] = useState(null); 
 
+    // MATRÍCULAS
+    const [documentoDoCliente, setDocumentoDoCliente] = useState(''); // CPF ou Matrícula
+    const [isGrandeCliente, setIsGrandeCliente] = useState(false);
+    // Armazena a lista de objetos { numero, endereco, isGrandeCliente } da API
+    const [matriculasDoCliente, setMatriculasDoCliente] = useState([]);
+
+    // Função para limpar a sessão (resetar estados)
     const limparSessao = () => {
         setTipoAtendimento(null);
         setOrigemFluxo(null);
         setServicoEscolhido(null);
+        setDocumentoDoCliente('');
+        setIsGrandeCliente(false);
+        setMatriculasDoCliente([])
     };
 
     return (
@@ -26,7 +36,13 @@ export const AtendimentoProvider = ({ children }) => {
                 setTipoAtendimento,
                 setOrigemFluxo,
                 setServicoEscolhido,
-                limparSessao
+                limparSessao,
+                documentoDoCliente,
+                setDocumentoDoCliente,
+                isGrandeCliente,
+                setIsGrandeCliente,
+                matriculasDoCliente,
+                setMatriculasDoCliente
             }}
         >
             {children}

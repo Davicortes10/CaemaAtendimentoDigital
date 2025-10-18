@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAtendimento } from "../context/AtendimentoContext"; 
+import { fetchClienteData } from '../api/apiMock';
 
 // Components
 import Layout from '../components/layout/Layout';
@@ -12,33 +13,43 @@ import ButtonEntry from "../components/ui/ButtonEntry";
 const Entrada = () => {
   const [inputValue, setInputValue] = useState('');
   const [erro, setErro] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const { 
     tipoAtendimento, 
     setOrigemFluxo, 
-    setServicoEscolhido 
+    setServicoEscolhido, 
+    setDocumentoDoCliente
   } = useAtendimento(); 
+
+  const isCPF = (valor) => valor.length === 11;
+  const isMatricula = (valor) => valor.length >= 6 && valor.length <= 10;
 
   const handleSubmit = (e) => {
         e.preventDefault();
         setErro('');
-        if (inputValue.trim() === '') {
+
+        const valorLimpo = inputValue.replace(/\D/g, '');
+
+        if (valorLimpo.length === 0) {
             setErro("Por favor, preencha sua Matrícula ou CPF.");
             return;
         }
 
         // Validação de Somente Números (Segurança final)
-        if (!/^\d+$/.test(inputValue)) {
+        if (!/^\d+$/.test(valorLimpo)) {
             setErro("O campo deve conter apenas números."); 
             return;
         }
         
         // Validação de Tamanho 
-        if (inputValue.length < 11) {
-            setErro("A Matrícula/CPF deve ter pelo menos 11 dígitos.");
+        if (!isCPF(valorLimpo) && !isMatricula(valorLimpo)) {
+            setErro("Documento inválido. Use 6-10 dígitos para Matrícula ou 11 para CPF.");
             return;
         }
+        //Salva no Context
+        setDocumentoDoCliente(valorLimpo)
         setOrigemFluxo('Matricula/CPF Válido');
         // Navigate to Loading page
         navigate('/loading'); 

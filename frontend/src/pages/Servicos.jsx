@@ -16,19 +16,22 @@ const servicesList = [
         label: "2ª Via da Conta", 
         icon: IoDocumentText, 
         isPresencial: false, // ONLINE (Segue a rota)
-        route: '/fatura' 
+        route: '/fatura',
+        onlyGrandeCliente: false
     },
     { 
         label: "Informar Falta de Água", 
         icon: FaFaucet, 
         isPresencial: true, // PRESENCIAL (Gera Senha)
-        serviceName: "Informar Falta de Água"
+        serviceName: "Informar Falta de Água",
+        onlyGrandeCliente: false
     },
     { 
         label: "Alterar Dados Cadastrais", 
         icon: FaUserPen, 
         isPresencial: true, // ONLINE
-        route: '/alterCad' 
+        route: '/alterCad',
+        onlyGrandeCliente: false
     },
     
 ];
