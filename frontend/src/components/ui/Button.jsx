@@ -1,12 +1,20 @@
-import React from "react";
+import React from 'react';
 
-const Button = ({label, onclick}) => {
-    const baseClasses = "bg-lime-400 hover:bg-lime-600 text-sky-900 w-sm h-20 rounded-2xl text-4xl font-semibold mt-5" 
+const Button = ({ label, onClick, className = '', IconComponent, type = 'button' }) => {
+    const baseClasses = `
+        bg-lime-400 hover:bg-lime-600 text-sky-900
+        rounded-2xl font-semibold
+        py-3 px-4 text-lg
+        w-full
+        flex items-center justify-center gap-2
+    `;
+
     return (
-        <div className="flex flex-col justify-center items-center">
-        <button onclick={onclick} className={baseClasses}>
-            {label}
-        </button>
+        <div className="w-full">
+                    <button type={type} onClick={onClick} className={`${baseClasses} ${className}`}>
+                {IconComponent && <IconComponent className="text-xl" />}
+                {label}
+            </button>
         </div>
     );
 };

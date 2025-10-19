@@ -1,12 +1,19 @@
 import React from "react";
 
-const ButtonEntry = ({label, onClick}) => {
-    const baseClasses = "bg-white hover:bg-zinc-200 text-sky-900 w-sm h-20 rounded-2xl text-2xl font-semibold mt-5" 
+const ButtonEntry = ({ label, onClick, className = '' }) => {
+    const baseClasses = `
+        bg-white hover:bg-zinc-200 text-sky-900
+        rounded-2xl font-semibold
+        py-3 px-4 text-lg
+        w-full
+        flex items-center justify-center
+    `;
+
     return (
-        <div className="flex flex-col justify-center items-center">
-        <button onClick={onClick} className={baseClasses}>
-            {label}
-        </button>
+        <div className="w-full my-2">
+            <button onClick={onClick} className={`${baseClasses} ${className}`}>
+                {label}
+            </button>
         </div>
     );
 };

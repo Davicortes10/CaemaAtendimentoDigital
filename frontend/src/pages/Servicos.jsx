@@ -131,24 +131,33 @@ const Servicos = () => {
             </div>
           ))}
             
+        
+          {/* Navegação: Voltar / Avançar alinhadas às bordas dos cards */}
         </div>
+
+        <div className="w-full flex justify-center mt-4">
+          <div className="w-full max-w-5xl flex justify-between">
+            <div className="w-40">
+              <ButtonWhite
+                className='text-2xl'
+                IconComponent={FaArrowAltCircleLeft}
+                label={"Voltar"}
+                onClick={prev}
+                disabled={currentIndex === 0}
+              />
+            </div>
+            <div className="w-40">
+              <ButtonWhite
+                className='text-2xl'
+                IconComponent={FaArrowAltCircleRight}
+                label={"Avançar"}
+                onClick={next}
+                disabled={currentIndex === maxIndex}
+              />
+            </div>
+          </div>
         </div>
-        <div className='flex flex-row w-full justify-between px-74'>
-          <ButtonWhite
-              className='text-2xl'
-              IconComponent={FaArrowAltCircleLeft}
-              label={"Voltar"}
-              onClick={prev}
-              disabled={currentIndex === 0}
-          />
-          <ButtonWhite
-              className='text-2xl'
-              IconComponent={FaArrowAltCircleRight}
-              label={"Avançar"}
-              onClick={next}
-              disabled={currentIndex === maxIndex}
-          />
-        </div>
+      </div>
       
       <div className='flex flex-row w-full justify-center px-70'>
         <ButtonWhite

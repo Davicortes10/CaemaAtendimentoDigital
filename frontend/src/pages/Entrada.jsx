@@ -86,17 +86,39 @@ const Entrada = () => {
             onChange = {(e) => setInputValue(e.target.value)}
             isNumeric={true} 
           />
-          <Button 
-            label={"Avançar"}
-            type="submit"
-          />
+          <div className="w-80 mx-auto mt-2">
+            <Button 
+              label={"Avançar"}
+              type="submit"
+            />
+          </div>
           
         </form>
-        <ButtonEntry
-            label={"Não Possuo Matrícula"}
-            onClick={handleSolicitarMatricula}
-            type="button"
-        />
+        {/* Card específico para 'Não Possuo Matrícula' com tamanho padronizado */}
+  <div className="w-80 mx-auto mt-4">
+          <div className="bg-white rounded-2xl shadow-lg w-80 h-60 flex flex-col items-center justify-center p-4">
+            <div className="w-full mb-1">
+              <ButtonEntry
+                label={"Não Possuo Matrícula"}
+                onClick={handleSolicitarMatricula}
+                type="button"
+              />
+            </div>
+
+            {/* QR code apontando para a página de alteração de cadastro */}
+            <div className="mt-1 text-center">
+              <p className="text-xs text-gray-600 mb-2">Ou acesse pelo celular:</p>
+              <div className="flex items-center justify-center gap-2">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.origin + '/alterCad')}`}
+                  alt="QR Alterar Cadastro"
+                  className="w-20 h-20 rounded"
+                />
+              </div>
+              {/* Botões removidos conforme solicitado - QR apenas como atalho visual */}
+            </div>
+          </div>
+        </div>
         <div className="fixed bottom-4 right-4 px-4 bg-white bg-opacity-95 rounded-lg shadow-lg max-w-xs border-2 border-blue-300">
           <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
           <p className="text-blue-700 text-base font-mono bg-blue-50 p-2 rounded border text-center font-bold">
