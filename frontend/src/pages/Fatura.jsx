@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Logo from "../components/ui/Logo";
 
 const CardFaturas = () => {
@@ -19,6 +19,7 @@ const CardFaturas = () => {
 
   // filtro de status: 'todos' | 'pago' | 'vencido'
   const [statusFilter, setStatusFilter] = useState("todos");
+  const containerRef = useRef(null);
 
   // 💡 Recupera protocolo do localStorage
   useEffect(() => {
@@ -109,30 +110,60 @@ const CardFaturas = () => {
         </button>
       </div>
 
-      <div className="overflow-x-auto pb-4">
+      <div
+        ref={containerRef}
+        className="overflow-x-auto pb-4 relative"
+        style={{ scrollSnapType: 'x mandatory', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+      >
+        {/* Botões de navegação do carrossel */}
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20">
+          <button
+            aria-label="Anterior"
+            onClick={() => {
+              if (containerRef.current) {
+                containerRef.current.scrollBy({ left: -containerRef.current.clientWidth * 0.6, behavior: 'smooth' });
+              }
+            }}
+            className="bg-white/90 hover:bg-white text-blue-900 rounded-full w-10 h-10 flex items-center justify-center shadow"
+          >
+            ◀
+          </button>
+        </div>
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20">
+          <button
+            aria-label="Próximo"
+            onClick={() => {
+              if (containerRef.current) {
+                containerRef.current.scrollBy({ left: containerRef.current.clientWidth * 0.6, behavior: 'smooth' });
+              }
+            }}
+            className="bg-white/90 hover:bg-white text-blue-900 rounded-full w-10 h-10 flex items-center justify-center shadow"
+          >
+            ▶
+          </button>
+        </div>
+
+        {/* Container do carrossel */}
         <div className="flex gap-6 px-2 min-w-max justify-center">
           {faturasFiltradas.length === 0 && (
             <div className="text-white">Nenhuma fatura encontrada nos últimos 3 meses com este filtro.</div>
           )}
-          {faturasFiltradas.map((fatura, index) => (
+          {faturasFiltradas.slice(0, 3).map((fatura, index) => (
             <div
               key={index}
-              className="min-w-[260px] bg-white shadow-lg rounded-2xl p-5 border border-gray-200 hover:shadow-xl transition-all duration-300"
+              className="flex-shrink-0 w-80 h-60 bg-white shadow-lg rounded-2xl p-4 border border-gray-200 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              style={{ scrollSnapAlign: 'start' }}
             >
-              <div className="text-lg font-semibold text-blue-700 mb-2">
+              <div className="text-md font-semibold text-blue-700">
                 {fatura.mes} / {fatura.parsedDate ? fatura.parsedDate.getFullYear() : "2025"}
               </div>
-              <div className="text-gray-600 mb-1">
+              <div className="text-gray-600 text-sm">
                 <strong>Data:</strong> {fatura.data}
               </div>
-              <div className="text-gray-800 text-xl font-bold mb-2">
+              <div className="text-gray-800 text-lg font-bold">
                 R$ {fatura.valor.toFixed(2)}
               </div>
-              <div
-                className={`inline-block px-3 py-1 rounded-full border text-sm font-semibold ${corStatus(
-                  fatura.displayStatus
-                )}`}
-              >
+              <div className={`inline-block px-3 py-1 rounded-full border text-sm font-semibold ${corStatus(fatura.displayStatus)}`}>
                 {fatura.displayStatus}
               </div>
             </div>

@@ -1,29 +1,19 @@
 import React from "react";
 
-const ButtonWhite = ({label, onClick, className = '' , IconComponent}) => {
+const ButtonWhite = ({ label, onClick, className = '', IconComponent }) => {
     const baseClasses = `
-        bg-white 
-        hover:bg-zinc-200 
-        text-sky-900 
-        w-xs
-        h-12
-        rounded-4xl 
-        font-semibold 
-        mt-2
-        w-xs
-        flex flex-row items-center justify-center
-    `; 
+        bg-white hover:bg-zinc-200 text-sky-900
+        rounded-2xl font-semibold
+        py-2 px-4 text-md
+        flex items-center justify-center gap-2
+    `;
+
     return (
-        <div className="w-1/4 flex flex-col justify-center items-center mx-3 my-3">
-        <button 
-                onClick={onClick} 
-                className={`${baseClasses} ${className}`}
-            >
-                {IconComponent && ( 
-                    <IconComponent className="text-2xl text-sky-900 mr-2"/>
-                )}
+        <div className="w-full max-w-xs mx-auto my-2">
+            <button onClick={onClick} className={`${baseClasses} ${className}`}>
+                {IconComponent && <IconComponent className="text-xl" />}
                 {label}
-        </button>
+            </button>
         </div>
     );
 };
