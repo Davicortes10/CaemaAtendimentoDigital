@@ -108,7 +108,7 @@ const Servicos = () => {
   return (
     <Layout>
       <Logo />
-      <h2 className='text-white text-5xl font-semibold pt-1'>
+      <h2 className='text-white text-4xl font-semibold pt-1'>
         Selecão de serviços
       </h2>
       <User />
