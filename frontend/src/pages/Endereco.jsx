@@ -99,7 +99,7 @@ const Endereco = () => {
           ))}
         </div>
       </div>
-      <div className='flex flex-row w-full justify-between px-74'>
+      <div className='flex flex-row w-full justify-between px-20'>
           <ButtonWhite
               className='text-2xl'
               IconComponent={FaArrowAltCircleLeft}
