@@ -1,7 +1,7 @@
 import { Hexagon } from "lucide-react";
-import EditData from "../assets/icons/edit-data.svg";
+import EditDataIcon from "../assets/icons/edit-data.svg";
 
-export const ReportWaterShortage = () => {
+export const EditData = () => {
     return (
         <div className="px-4 py-6 max-w-lg mx-auto">
             <div className="flex items-center gap-3 mb-8">
