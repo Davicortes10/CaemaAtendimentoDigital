@@ -6,7 +6,7 @@ export const EditData = () => {
         <div className="px-4 py-6 max-w-lg mx-auto">
             <div className="flex items-center gap-3 mb-8">
                 <img 
-                    src={EditData} 
+                    src={EditDataIcon} 
                     alt="Ícone de Edição de Dados" 
                     className="w-8 h-8"
                 />
