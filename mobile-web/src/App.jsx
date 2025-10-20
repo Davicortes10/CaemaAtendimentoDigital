@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/login.jsx"
 import { Home } from "./pages/Home.jsx";
-import { ReportWaterShortage } from "./pages/ReportWaterShortage.jsx";
+import { EditData } from "./pages/EditData.jsx";
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/ReportWaterShortage" element={<ReportWaterShortage />} />
+        <Route path="/EditData" element={<EditData />} />
       </Routes>
     </Router>
   )
