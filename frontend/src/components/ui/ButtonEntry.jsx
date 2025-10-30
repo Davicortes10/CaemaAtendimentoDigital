@@ -4,8 +4,9 @@ const ButtonEntry = ({ label, onClick, className = '' }) => {
     const baseClasses = `
         bg-white hover:bg-zinc-200 text-sky-900
         rounded-2xl font-semibold
-        py-3 px-4 text-lg
+        py-3 px-4 text-xl
         w-full
+        h-20
         flex items-center justify-center
     `;
 

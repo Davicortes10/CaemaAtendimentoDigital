@@ -29,7 +29,8 @@ const servicesList = [
     { 
         label: "Alterar Dados Cadastrais", 
         icon: FaUserPen, 
-        isPresencial: false, // ONLINE
+        isPresencial: true, // ONLINE
+        ServiceName: "Alterar Dados Cadastrais",
         route: '/alterCad',
         onlyGrandeCliente: false
     },
