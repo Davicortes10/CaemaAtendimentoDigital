@@ -86,7 +86,7 @@ const Entrada = () => {
             onChange = {(e) => setInputValue(e.target.value)}
             isNumeric={true} 
           />
-          <div className="w-80 mx-auto mt-2">
+          <div className="w-80 mx-auto mt-4">
             <Button 
               label={"Avançar"}
               type="submit"
@@ -95,14 +95,13 @@ const Entrada = () => {
           
         </form>
         {/* Card específico para 'Não Possuo Matrícula' com tamanho padronizado */}
-  <div className="w-80 mx-auto mt-4">
+  
           <div className="w-80 mt-2">
               <ButtonEntry
                 label={"Não Possuo Matrícula"}
                 onClick={handleSolicitarMatricula}
                 type="button"
               />
-          </div>
         </div>
         <div className="fixed bottom-4 right-4 px-4 bg-white bg-opacity-95 rounded-lg shadow-lg max-w-xs border-2 border-blue-300">
           <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
