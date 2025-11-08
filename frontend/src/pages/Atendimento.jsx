@@ -22,13 +22,13 @@ const Atendimento = () => {
             </h2>
             <div className="flex flex-row w-1/2 justify-between px-20">
                 <Box
-                    className = "py-24 text-4xl"
+                    className = "py-24 text-4xl w-90 h-80"
                     label={"Atendimento Normal"}
                     onClick={() => handleSelectAtendimento('Normal')}
 
                 />
                 <Box
-                    className = "py-24 text-4xl"
+                    className = "py-24 text-4xl w-90 h-80"
                     label={"Atendimento Preferencial"}
                     onClick={() => handleSelectAtendimento('Preferencial')}
                 />

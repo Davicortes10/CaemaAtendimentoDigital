@@ -31,6 +31,7 @@ const Loading = () => {
             try {
                 // 2. CHAMA A API 
                 const dadosCliente = await fetchClienteData(documento); 
+                const matriculas = dadosCliente.matrículas || [];
                 
                 // 3. SALVA A LISTA DE MATRÍCULAS NO CONTEXT
                 setMatriculasDoCliente(dadosCliente.matrículas);
@@ -41,6 +42,11 @@ const Loading = () => {
                     console.error("Nenhuma matrícula encontrada.");
                     navigate('/erro', { state: { mensagem: "Documento não encontrado no sistema." } });
                     
+                }else if (matriculas.length === 1) {
+                const matriculaUnica = matriculas[0];
+                setIsGrandeCliente(matriculaUnica.isGrandeCliente); 
+
+                navigate('/servicos'); 
                 } else if (isCPF(documento)) {
                     // FLUXO CPF: Múltiplas matrículas. Vai para seleção de endereço.
                     navigate('/endereco'); 

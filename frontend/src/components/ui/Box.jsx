@@ -6,7 +6,6 @@ const Box = ({ label, onClick, className = '', IconComponent }) => {
         hover:bg-zinc-200 
         text-sky-950 rounded-2xl 
         font-semibold 
-        mt-2
         overflow-hidden
         flex flex-col items-center justify-center 
         w-80 h-60
