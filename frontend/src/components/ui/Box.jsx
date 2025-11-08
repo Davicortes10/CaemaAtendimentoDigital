@@ -1,7 +1,6 @@
 import React from "react";
 
 const Box = ({ label, onClick, className = '', IconComponent }) => {
-    
     const baseClasses = `
         bg-white 
         hover:bg-zinc-200 
