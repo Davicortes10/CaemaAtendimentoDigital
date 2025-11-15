@@ -17,18 +17,18 @@ const Atendimento = () => {
     return (
         <Layout>
             <Logo/>
-            <h2 className="text-white text-5xl font-semibold pt-1 pb-7">
+            <h2 className="text-white text-5xl font-semibold pt-1 pb-24">
                 Escolha uma opção
             </h2>
-            <div className="flex flex-row w-1/2 justify-between px-20">
+            <div className="flex flex-row w-1/2 justify-between">
                 <Box
-                    className = "py-24 text-4xl w-90 h-80"
+                    className = "py-12 text-4xl w-xl h-96"
                     label={"Atendimento Normal"}
                     onClick={() => handleSelectAtendimento('Normal')}
 
                 />
                 <Box
-                    className = "py-24 text-4xl w-90 h-80"
+                    className = "py-12 text-4xl w-xl h-96"
                     label={"Atendimento Preferencial"}
                     onClick={() => handleSelectAtendimento('Preferencial')}
                 />
