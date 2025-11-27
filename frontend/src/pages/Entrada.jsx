@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAtendimento } from "../context/AtendimentoContext"; 
 import { fetchClienteData } from '../api/apiMock';
-
+import Protocolo from '../components/ui/Protocolo';
 // Components
 import Layout from '../components/layout/Layout';
 import Logo from '../components/ui/Logo';
@@ -72,7 +72,7 @@ const Entrada = () => {
   return (
     <Layout>
       <Logo />
-      <h2 className="text-white text-5xl font-semibold pt-1 pb-7">
+      <h2 className="text-white text-5xl font-semibold pt-12 pb-12">
           Digite sua Matricula ou CPF!
         </h2>
 
@@ -86,7 +86,7 @@ const Entrada = () => {
             onChange = {(e) => setInputValue(e.target.value)}
             isNumeric={true} 
           />
-          <div className="w-80 mx-auto mt-4">
+          <div className="w-full mx-auto mt-4">
             <Button 
               label={"Avançar"}
               type="submit"
@@ -96,22 +96,14 @@ const Entrada = () => {
         </form>
         {/* Card específico para 'Não Possuo Matrícula' com tamanho padronizado */}
   
-          <div className="w-80 mt-2">
+          <div className="w-2sm mt-2">
               <ButtonEntry
                 label={"Não Possuo Matrícula"}
                 onClick={handleSolicitarMatricula}
                 type="button"
               />
         </div>
-        <div className="fixed bottom-4 right-4 px-4 bg-white bg-opacity-95 rounded-lg shadow-lg max-w-xs border-2 border-blue-300">
-          <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
-          <p className="text-blue-700 text-base font-mono bg-blue-50 p-2 rounded border text-center font-bold">
-            Variavel de protocolo aqui
-          </p>
-          <p className="text-blue-600 text-xs mt-2 text-center">
-            Guarde este número
-          </p>
-        </div>
+        <Protocolo/>
     </Layout>
   );
 };

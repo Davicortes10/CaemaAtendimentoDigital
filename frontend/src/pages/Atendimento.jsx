@@ -5,6 +5,7 @@ import { useAtendimento } from "../context/AtendimentoContext";
 import Layout from "../components/layout/Layout";
 import Logo from "../components/ui/Logo";
 import Box from "../components/ui/Box";
+import Protocolo from '../components/ui/Protocolo';
 
 const Atendimento = () => {
     const navigate = useNavigate();
@@ -33,6 +34,7 @@ const Atendimento = () => {
                     onClick={() => handleSelectAtendimento('Preferencial')}
                 />
             </div>
+            <Protocolo/>
         </Layout>
     );
 }

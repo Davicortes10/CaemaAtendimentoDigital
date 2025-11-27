@@ -4,9 +4,10 @@ const ButtonWhite = ({ label, onClick, className = '', IconComponent }) => {
     const baseClasses = `
         bg-white hover:bg-zinc-200 text-sky-900
         rounded-2xl font-semibold
-        w-xs h-12
+        w-xs h-20
         py-2 px-4 text-md
         flex items-center justify-center gap-2
+        border-1 border-sky-900
     `;
 
     return (

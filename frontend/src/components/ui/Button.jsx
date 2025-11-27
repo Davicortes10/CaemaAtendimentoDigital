@@ -4,9 +4,9 @@ const Button = ({ label, onClick, className = '', IconComponent, type = 'button'
     const baseClasses = `
         bg-lime-400 hover:bg-lime-600 text-sky-900
         rounded-2xl font-semibold
-        py-3 px-4 text-2xl
+        py-3 px-4 text-4xl
         w-full
-        h-20
+        h-24
         flex items-center justify-center gap-2
     `;
 

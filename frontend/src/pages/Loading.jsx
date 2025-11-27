@@ -77,7 +77,7 @@ const Loading = () => {
       <Logo />
       <div className="animate-[spin_3s_linear_infinite]
                             rounded-full 
-                            h-64 w-64
+                            h-84 w-84
                             border-[20px]       /* Largura da borda/anel (20px) */
                           border-white     
                           border-t-lime-600

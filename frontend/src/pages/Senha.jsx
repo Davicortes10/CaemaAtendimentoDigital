@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import ButtonWhite from '../components/ui/ButtonWhite'; 
 import { FaPrint, FaRegWindowClose } from 'react-icons/fa'; 
 import { QRCodeCanvas } from 'qrcode.react'; // Biblioteca do QR Code
+import Protocolo from '../components/ui/Protocolo';
 
 const Senha = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Senha = () => {
         navigate('/');
     };
 
-    // 🌐 URL para o QR Code
+    //  URL para o QR Code
     const urlBase = "https://meusistema.com/senha"; // <-- altere para o domínio do seu sistema
     const urlQRCode = `${urlBase}/${numeroSenha}`;
 
@@ -43,7 +44,7 @@ const Senha = () => {
                 Sua senha foi gerada com sucesso!
             </h2>
 
-            <div className='bg-white p-8 rounded-2xl shadow-2xl w-[500px] text-center'> 
+            <div className='bg-white p-8 rounded-2xl shadow-2xl w-[650px] text-center'> 
                 <p className='text-2xl text-gray-700'>
                     Sua senha de atendimento é:
                 </p>
@@ -56,7 +57,7 @@ const Senha = () => {
                 <div className="flex justify-center">
                     <QRCodeCanvas 
                         value={urlQRCode}
-                        size={150}
+                        size={220}
                         bgColor="#ffffff"
                         fgColor="#1e3a8a"
                         level="H"
@@ -74,7 +75,7 @@ const Senha = () => {
                 </div>
             </div>
 
-            <div className="flex flex-row justify-between gap-3 w-[600px]">
+            <div className="flex flex-row justify-between gap-3 w-[650px]">
                 <ButtonWhite
                     label="Imprimir"
                     IconComponent={FaPrint}
@@ -88,6 +89,7 @@ const Senha = () => {
                     className="w-full text-2xl py-3" 
                 />
             </div>
+            <Protocolo/>
         </Layout>
     );
 };

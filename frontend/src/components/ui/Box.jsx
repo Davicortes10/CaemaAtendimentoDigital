@@ -8,13 +8,14 @@ const Box = ({ label, onClick, className = '', IconComponent }) => {
         font-semibold 
         overflow-hidden
         flex flex-col items-center justify-center 
-        w-80 h-60
+        w-80 h-72
         py-10
         px-2
+        border-1 border-sky-900
     `; 
     
     return (
-        <div className="w-1/4 flex flex-col justify-center items-center mx-3">
+        <div className="w-1/3 flex flex-col justify-center items-center mx-3">
             <button 
                 onClick={onClick} 
                 className={`${baseClasses} ${className}`}
