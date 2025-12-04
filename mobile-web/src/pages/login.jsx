@@ -1,6 +1,14 @@
 import CaemaLogo from "../assets/logo-caema.svg";
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
+
+    const navigate = useNavigate();
+
+    const handleLogin = (e) => {
+        e.preventDefault(); 
+        navigate('/Home');
+    };  
     return (
         <div className="flex flex-col items-center justify-center w-full h-screen bg-[#014888]">
             <img 
@@ -8,7 +16,7 @@ export const Login = () => {
                 alt="Logo Caema" 
                 className="w-50"
             />
-            <div className="flex flex-col items-center justify-center p-4 gap-4 w-[90%]">
+            <form onSubmit={handleLogin} className="flex flex-col items-center justify-center p-4 gap-4 w-[90%]">
                 <h2 className="text-xl text-white font-bold">AutoAtendimento Mobile</h2>
                 <input 
                     type="text" 
@@ -25,7 +33,7 @@ export const Login = () => {
                 >
                     ENTRAR
                 </button>
-            </div>
+            </form>
         </div>
     )
 }
