@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAtendimento } from "../context/AtendimentoContext"; 
 
@@ -6,6 +6,7 @@ import Layout from "../components/layout/Layout";
 import Logo from "../components/ui/Logo";
 import Box from "../components/ui/Box";
 import Protocolo from '../components/ui/Protocolo';
+import Direitos from "../components/ui/Direitos";
 
 const Atendimento = () => {
     const navigate = useNavigate();
@@ -34,7 +35,8 @@ const Atendimento = () => {
                     onClick={() => handleSelectAtendimento('Preferencial')}
                 />
             </div>
-            <Protocolo/>
+            <Protocolo/> 
+            <Direitos/>
         </Layout>
     );
 }

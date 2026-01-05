@@ -24,7 +24,7 @@ const Endereco = () => {
   } = useAtendimento();
 
     // 💡 Dados Receiver
-    const [protocolo, setProtocolo] = useState(null);
+    const [setProtocolo] = useState(null);
 
     // 💡 Recupera protocolo do localStorage
     useEffect(() => {
@@ -84,7 +84,7 @@ const Endereco = () => {
       </h2>
       <User />
       <div className='w-full max-w-5xl mx-auto flex flex-col items-center'>
-        <div ref={scrollRef} className='w-full flex overflow-x-scroll snap-x snap-mandatory scrollbar-hide'>
+        <div ref={scrollRef} className={`w-full flex overflow-x-hidden snap-x snap-mandatory scrollbar-hide ${matriculasDoCliente.length < 3 ? 'justify-center' : ''}`}>
           {matriculasDoCliente.map((item, index) => (
             <div 
               key={index} 
