@@ -7,6 +7,7 @@ import Logo from '../components/ui/Logo';
 import Box from '../components/ui/Box';
 import ButtonWhite from '../components/ui/ButtonWhite';
 import Protocolo from '../components/ui/Protocolo';
+import Direitos from '../components/ui/Direitos';
 
 import { IoDocumentText } from "react-icons/io5";
 import { FaFaucet, FaUserPen, FaTriangleExclamation, FaRightToBracket} from "react-icons/fa6";
@@ -157,7 +158,15 @@ const Servicos = () => {
             disabled={currentIndex === maxIndex}
           />
         </div>
-        <Protocolo/>
+        {/* Rodapé: Extremidades da tela (Canto a Canto) */}
+        <div className="w-full flex flex-row justify-between items-end px-16 mt-auto">
+                    <div className="text-left">
+                        <Direitos />
+                    </div>
+                    <div className="text-right">
+                        <Protocolo />
+                    </div>
+        </div>
      
     </Layout>
   );

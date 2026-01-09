@@ -16,27 +16,38 @@ const Atendimento = () => {
         setTipoAtendimento(tipo);
         navigate('/entrada'); 
     };
+
     return (
         <Layout>
-            <Logo/>
-            <h2 className="text-white text-5xl font-semibold pt-1 pb-24">
-                Escolha uma opção
-            </h2>
-            <div className="flex flex-row w-1/2 justify-between">
-                <Box
-                    className = "py-12 text-4xl w-xl h-96"
-                    label={"Atendimento Normal"}
-                    onClick={() => handleSelectAtendimento('Normal')}
+            {/* Logo com menos margem inferior se necessário */}
+            <Logo />
+                <h2 className="text-white text-7xl font-semibold mb-16">
+                    Escolha uma opção
+                </h2>
+                
+                {/* Reduzi mb-32 para mb-16 para aproximar o rodapé dos cards */}
+                <div className="flex flex-row w-1/2 justify-between mb-16">
+                    <Box
+                        className="text-4xl w-[420px] h-96 shadow-2xl"
+                        label={"Atendimento Normal"}
+                        onClick={() => handleSelectAtendimento('Normal')}
+                    />
+                    <Box
+                        className="text-4xl w-[420px] h-96 shadow-2xl"
+                        label={"Atendimento Preferencial"}
+                        onClick={() => handleSelectAtendimento('Preferencial')}
+                    />
+                </div>
 
-                />
-                <Box
-                    className = "py-12 text-4xl w-xl h-96"
-                    label={"Atendimento Preferencial"}
-                    onClick={() => handleSelectAtendimento('Preferencial')}
-                />
-            </div>
-            <Protocolo/> 
-            <Direitos/>
+                {/* Rodapé: Extremidades da tela (Canto a Canto) */}
+                <div className="w-full flex flex-row justify-between items-end px-16 mt-auto">
+                    <div className="text-left">
+                        <Direitos />
+                    </div>
+                    <div className="text-right">
+                        <Protocolo />
+                    </div>
+                </div>
         </Layout>
     );
 }

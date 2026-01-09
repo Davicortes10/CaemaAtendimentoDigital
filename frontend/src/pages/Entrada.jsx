@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAtendimento } from "../context/AtendimentoContext"; 
 import { fetchClienteData } from '../api/apiMock';
 import Protocolo from '../components/ui/Protocolo';
+import Direitos from "../components/ui/Direitos";
 // Components
 import Layout from '../components/layout/Layout';
 import Logo from '../components/ui/Logo';
@@ -103,7 +104,15 @@ const Entrada = () => {
                 type="button"
               />
         </div>
-        <Protocolo/>
+        {/* Rodapé: Extremidades da tela (Canto a Canto) */}
+        <div className="w-full flex flex-row justify-between items-end px-16 mt-auto">
+                    <div className="text-left">
+                        <Direitos />
+                    </div>
+                    <div className="text-right">
+                        <Protocolo />
+                    </div>
+        </div>
     </Layout>
   );
 };

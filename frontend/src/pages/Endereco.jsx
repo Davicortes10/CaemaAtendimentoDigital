@@ -8,6 +8,7 @@ import Logo from '../components/ui/Logo';
 import Box from '../components/ui/Box';
 import ButtonWhite from '../components/ui/ButtonWhite';
 import Protocolo from '../components/ui/Protocolo';
+import Direitos from '../components/ui/Direitos';
 
 import { FaHome, FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa"; 
 import {FaRightToBracket} from "react-icons/fa6";
@@ -126,7 +127,15 @@ const Endereco = () => {
           
         </div>
       
-      <Protocolo/>
+      {/* Rodapé: Extremidades da tela (Canto a Canto) */}
+        <div className="w-full flex flex-row justify-between items-end px-16 mt-auto">
+                    <div className="text-left">
+                        <Direitos />
+                    </div>
+                    <div className="text-right">
+                        <Protocolo />
+                    </div>
+        </div>
     </Layout>
   );
 };

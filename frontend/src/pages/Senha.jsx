@@ -8,6 +8,7 @@ import ButtonWhite from '../components/ui/ButtonWhite';
 import { FaPrint, FaRegWindowClose } from 'react-icons/fa'; 
 import { QRCodeCanvas } from 'qrcode.react'; // Biblioteca do QR Code
 import Protocolo from '../components/ui/Protocolo';
+import Direitos from '../components/ui/Direitos';
 
 const Senha = () => {
     const navigate = useNavigate();
@@ -89,7 +90,15 @@ const Senha = () => {
                     className="w-full text-2xl py-3" 
                 />
             </div>
-            <Protocolo/>
+            {/* Rodapé: Extremidades da tela (Canto a Canto) */}
+                <div className="w-full flex flex-row justify-between items-end px-16 mt-auto">
+                            <div className="text-left">
+                                <Direitos />
+                            </div>
+                            <div className="text-right">
+                                <Protocolo />
+                            </div>
+                </div>
         </Layout>
     );
 };
