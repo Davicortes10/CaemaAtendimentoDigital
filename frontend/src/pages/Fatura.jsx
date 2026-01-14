@@ -1,36 +1,22 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef } from "react";
+import Layout from "../components/layout/Layout";
 import Logo from "../components/ui/Logo";
+import Protocolo from "../components/ui/Protocolo";
+import Direitos from "../components/ui/Direitos";
 
 const CardFaturas = () => {
-  const [protocolo, setProtocolo] = useState(null);
-  // faturas de exemplo (datas recentes para demonstrar filtros Pago / Vencido)
-  const [faturas] = useState([
-    // Pago recente
-    { mes: "Agosto", data: "05/08/2025", valor: 350.0, status: "Pago" },
-    // Pendente (não vencida ainda)
-    { mes: "Setembro", data: "15/09/2025", valor: 420.5, status: "Pendente" },
-    // Não pago e com data anterior a hoje -> será considerado Vencido
-    { mes: "Outubro", data: "01/10/2025", valor: 290.75, status: "Não pago" },
-    // Pago dentro do período
-    { mes: "Outubro", data: "10/10/2025", valor: 380.0, status: "Pago" },
-    // Pendente recente
-    { mes: "Outubro", data: "12/10/2025", valor: 510.25, status: "Pendente" },
-  ]);
-
-  // filtro de status: 'todos' | 'pago' | 'vencido'
   const [statusFilter, setStatusFilter] = useState("todos");
   const containerRef = useRef(null);
 
-  // 💡 Recupera protocolo do localStorage
-  useEffect(() => {
-    const protocoloSalvo = localStorage.getItem("protocoloAtendimento");
-    if (protocoloSalvo) {
-      setProtocolo(protocoloSalvo);
-    }
-  }, []);
+  const [faturas] = useState([
+    { mes: "Agosto", data: "05/08/2025", valor: 350.0, status: "Pago" },
+    { mes: "Setembro", data: "15/09/2025", valor: 420.5, status: "Pendente" },
+    { mes: "Outubro", data: "01/10/2025", valor: 290.75, status: "Não pago" },
+    { mes: "Outubro", data: "10/10/2025", valor: 380.0, status: "Pago" },
+    { mes: "Novembro", data: "12/11/2025", valor: 510.25, status: "Pendente" },
+  ]);
 
   const parseBRDate = (ddmmyyyy) => {
-    // espera formato dd/mm/yyyy
     const parts = ddmmyyyy.split("/");
     if (parts.length !== 3) return null;
     const [d, m, y] = parts.map(Number);
@@ -39,147 +25,134 @@ const CardFaturas = () => {
 
   const corStatus = (status) => {
     switch (status) {
-      case "Pago":
-        return "bg-green-100 text-green-700 border-green-400";
-      case "Pendente":
-        return "bg-yellow-100 text-yellow-700 border-yellow-400";
-      case "Não pago":
-      case "Vencido":
-        return "bg-red-100 text-red-700 border-red-400";
-      default:
-        return "bg-gray-100 text-gray-600 border-gray-300";
+      case "Pago": return "bg-green-100 text-green-700 border-green-400";
+      case "Pendente": return "bg-yellow-100 text-yellow-700 border-yellow-400";
+      case "Vencido": return "bg-red-100 text-red-700 border-red-400";
+      default: return "bg-gray-100 text-gray-600 border-gray-300";
     }
   };
 
-  // calcula intervalo dos últimos 3 meses (inclui mês atual)
   const hoje = useMemo(() => new Date(), []);
-  const dataInicioTresMeses = useMemo(() => {
-    const d = new Date(hoje.getFullYear(), hoje.getMonth(), 1); // início do mês atual
-    d.setMonth(d.getMonth() - 2); // volta 2 meses -> cobre 3 meses no total
-    return d;
-  }, [hoje]);
 
-  // Lista filtrada: últimos 3 meses + filtro de status
   const faturasFiltradas = useMemo(() => {
     return faturas
       .map((f) => {
         const parsed = parseBRDate(f.data);
-        const isOverdue = parsed ? parsed < new Date() && f.status !== "Pago" : false;
-        const displayStatus = isOverdue && f.status !== "Pago" ? "Vencido" : f.status;
-        return { ...f, parsedDate: parsed, isOverdue, displayStatus };
+        const isOverdue = parsed ? parsed < hoje && f.status !== "Pago" : false;
+        const displayStatus = isOverdue ? "Vencido" : f.status;
+        return { ...f, parsedDate: parsed, displayStatus };
       })
       .filter((f) => {
-        // filtra pelos últimos 3 meses
-        if (!f.parsedDate) return false;
-        if (f.parsedDate < dataInicioTresMeses) return false;
-        if (f.parsedDate > new Date()) return false;
-
-        // filtra pelo status
         if (statusFilter === "pago") return f.displayStatus === "Pago";
         if (statusFilter === "vencido") return f.displayStatus === "Vencido";
-        return true; // todos
+        return true;
       })
       .sort((a, b) => b.parsedDate - a.parsedDate);
-  }, [faturas, dataInicioTresMeses, statusFilter]);
+  }, [faturas, statusFilter, hoje]);
 
   return (
-    <div className="min-h-screen bg-blue-900 p-8">
-      <Logo />
-      <h1 className="text-3xl font-bold text-center text-white mb-6">
-        Faturas Mensais
-      </h1>
+    <Layout>
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
 
-      <div className="flex items-center justify-center gap-3 mb-4">
-        <button
-          className={`px-4 py-2 rounded-md font-semibold ${statusFilter === "todos" ? "bg-white text-blue-900" : "bg-white/20 text-white"}`}
-          onClick={() => setStatusFilter("todos")}
+      {/* Cabeçalho com Botão Voltar Absoluto para não deslocar o Logo */}
+      <div className="w-full relative">
+        <button 
+          onClick={() => window.history.back()} // Ou use navigation do react-router
+          className="absolute left-30 top-12 bg-white hover:bg-white text-blue-900 hover:text-blue-900 px-8 py-3 rounded-xl border border-white/30 transition-all font-bold text-xl flex items-center gap-3 shadow-lg"
         >
-          Todos
+          <span className="text-2xl">←</span> Voltar
         </button>
-        <button
-          className={`px-4 py-2 rounded-md font-semibold ${statusFilter === "pago" ? "bg-white text-blue-900" : "bg-white/20 text-white"}`}
-          onClick={() => setStatusFilter("pago")}
-        >
-          Pago
-        </button>
-        <button
-          className={`px-4 py-2 rounded-md font-semibold ${statusFilter === "vencido" ? "bg-white text-blue-900" : "bg-white/20 text-white"}`}
-          onClick={() => setStatusFilter("vencido")}
-        >
-          Vencido
-        </button>
+        <Logo />
       </div>
 
-      <div
-        ref={containerRef}
-        className="overflow-x-auto pb-4 relative"
-        style={{ scrollSnapType: 'x mandatory', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
-      >
-        {/* Botões de navegação do carrossel */}
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20">
-          <button
-            aria-label="Anterior"
-            onClick={() => {
-              if (containerRef.current) {
-                containerRef.current.scrollBy({ left: -containerRef.current.clientWidth * 0.6, behavior: 'smooth' });
-              }
-            }}
-            className="bg-white/90 hover:bg-white text-blue-900 rounded-full w-10 h-10 flex items-center justify-center shadow"
-          >
-            ◀
-          </button>
-        </div>
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20">
-          <button
-            aria-label="Próximo"
-            onClick={() => {
-              if (containerRef.current) {
-                containerRef.current.scrollBy({ left: containerRef.current.clientWidth * 0.6, behavior: 'smooth' });
-              }
-            }}
-            className="bg-white/90 hover:bg-white text-blue-900 rounded-full w-10 h-10 flex items-center justify-center shadow"
-          >
-            ▶
-          </button>
+      <div className="flex-1 flex flex-col items-center justify-between w-full px-20 overflow-hidden">
+        
+        <div className="text-center">
+          <h1 className="text-6xl font-bold text-white mb-6 drop-shadow-md">Faturas Mensais</h1>
+          
+          <div className="flex gap-4 mb-8">
+            {["todos", "pago", "vencido"].map((filter) => (
+              <button
+                key={filter}
+                className={`px-10 py-3 rounded-xl text-2xl font-bold transition-all ${
+                  statusFilter === filter 
+                  ? "bg-white text-blue-900 shadow-xl scale-105" 
+                  : "bg-white/10 text-white border border-white/20 hover:bg-white/20"
+                }`}
+                onClick={() => setStatusFilter(filter)}
+              >
+                {filter.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Container do carrossel */}
-        <div className="flex gap-6 px-2 min-w-max justify-center">
-          {faturasFiltradas.length === 0 && (
-            <div className="text-white">Nenhuma fatura encontrada nos últimos 3 meses com este filtro.</div>
+        <div className="w-full relative h-[380px] flex items-center">
+          <div
+            ref={containerRef}
+            className="flex gap-8 overflow-x-auto no-scrollbar w-full px-10 py-4"
+            style={{ scrollSnapType: 'x mandatory', scrollBehavior: 'smooth' }}
+          >
+            {faturasFiltradas.length === 0 ? (
+              <div className="w-full text-center text-white text-3xl italic opacity-50">
+                Nenhuma fatura encontrada.
+              </div>
+            ) : (
+              faturasFiltradas.map((fatura, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 w-[420px] h-[320px] bg-white shadow-2xl rounded-[2.5rem] p-10 border border-gray-100 flex flex-col justify-between"
+                  style={{ scrollSnapAlign: 'center' }}
+                >
+                  <div className="text-2xl font-bold text-blue-800 uppercase tracking-tighter">
+                    {fatura.mes} / {fatura.parsedDate?.getFullYear()}
+                  </div>
+                  <div>
+                    <div className="text-gray-500 text-xl mb-1">Vencimento: {fatura.data}</div>
+                    <div className="text-blue-950 text-5xl font-black">
+                      <span className="text-2xl mr-1">R$</span>
+                      {fatura.valor.toFixed(2).replace('.', ',')}
+                    </div>
+                  </div>
+                  <div className={`text-center py-3 rounded-xl border-2 text-xl font-bold ${corStatus(fatura.displayStatus)}`}>
+                    {fatura.displayStatus}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {faturasFiltradas.length > 2 && (
+            <>
+              <button 
+                onClick={() => containerRef.current.scrollBy({ left: -450, behavior: 'smooth' })}
+                className="absolute -left-5 z-10 bg-white/20 hover:bg-white text-white hover:text-blue-900 w-16 h-16 rounded-full text-3xl flex items-center justify-center transition-all border border-white/30 shadow-lg"
+              >
+                ◀
+              </button>
+              <button 
+                onClick={() => containerRef.current.scrollBy({ left: 450, behavior: 'smooth' })}
+                className="absolute -right-5 z-10 bg-white/20 hover:bg-white text-white hover:text-blue-900 w-16 h-16 rounded-full text-3xl flex items-center justify-center transition-all border border-white/30 shadow-lg"
+              >
+                ▶
+              </button>
+            </>
           )}
-          {faturasFiltradas.slice(0, 3).map((fatura, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-80 h-60 bg-white shadow-lg rounded-2xl p-4 border border-gray-200 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
-              style={{ scrollSnapAlign: 'start' }}
-            >
-              <div className="text-md font-semibold text-blue-700">
-                {fatura.mes} / {fatura.parsedDate ? fatura.parsedDate.getFullYear() : "2025"}
-              </div>
-              <div className="text-gray-600 text-sm">
-                <strong>Data:</strong> {fatura.data}
-              </div>
-              <div className="text-gray-800 text-lg font-bold">
-                R$ {fatura.valor.toFixed(2)}
-              </div>
-              <div className={`inline-block px-3 py-1 rounded-full border text-sm font-semibold ${corStatus(fatura.displayStatus)}`}>
-                {fatura.displayStatus}
-              </div>
-            </div>
-          ))}
         </div>
+        
+        <p className="text-white/40 text-xl mt-4 animate-pulse">
+          Deslize para ver mais faturas →
+        </p>
       </div>
 
-      <p className="text-center text-blue-200 mt-6">Role para o lado para ver as faturas dos outros meses →</p>
-
-      {protocolo && (
-        <div className="fixed bottom-4 right-4 bg-white bg-opacity-95 rounded-lg p-4 shadow-lg max-w-xs border-2 border-blue-300">
-          <h3 className="text-blue-900 text-lg font-bold mb-2">📋 Protocolo:</h3>
-          <p className="text-blue-700 text-base font-mono bg-blue-50 p-2 rounded border text-center font-bold">{protocolo}</p>
-        </div>
-      )}
-    </div>
+      <div className="w-full flex flex-row justify-between items-end px-16 pb-4">
+        <Direitos />
+        <Protocolo />
+      </div>
+    </Layout>
   );
 };
 
