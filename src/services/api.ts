@@ -3,8 +3,8 @@ import axios from 'axios';
 // =============================================================================
 // CONFIGURAÇÃO DA API
 // =============================================================================
-// IMPORTANTE: Substitua esta URL pela URL real do backend quando disponível
-const API_BASE_URL = 'https://api.example.com/api';
+// TODO: Substitua esta URL pela URL real do backend
+const API_BASE_URL = 'http://localhost:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -22,12 +22,10 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Interceptor para tratar erros de autenticação
+// Interceptor para tratar erros de autenticação (401 redireciona para login)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -113,6 +111,13 @@ export interface Ticket {
   recallCount?: number;
 }
 
+export interface ServiceType {
+  id: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+}
+
 export interface Indicator {
   tme: number; // Tempo Médio de Espera (minutos)
   tma: number; // Tempo Médio de Atendimento (minutos)
@@ -182,8 +187,10 @@ export interface PaginatedResponse<T> {
 }
 
 // =============================================================================
-// DADOS MOCKADOS PARA DESENVOLVIMENTO
+// DADOS MOCKADOS PARA DESENVOLVIMENTO (fallback quando backend não disponível)
 // =============================================================================
+
+const USE_MOCK = true; // TODO: Mude para false quando o backend estiver pronto
 
 const mockCities: City[] = [
   { id: '1', name: 'São Luís' },
@@ -221,56 +228,44 @@ const mockAttendants: Attendant[] = [
 export const authService = {
   /**
    * POST /auth/login
-   * Realiza o login do usuário
    */
   login: async (credentials: LoginCredentials): Promise<LoginResponse> => {
-    // Credenciais mockadas para teste - Gerente
-    if (credentials.email === 'gerente@caema.com' && credentials.password === 'caema123') {
+    if (USE_MOCK) {
       await new Promise(resolve => setTimeout(resolve, 800));
-      return {
-        token: 'mock-jwt-token-gerente-2024',
-        user: {
-          id: '1',
-          name: 'Gerente CAEMA',
-          email: 'gerente@caema.com',
-          role: 'gerente' as const,
-        },
-      };
+      // Mock: Gerente
+      if (credentials.email === 'gerente@caema.com' && credentials.password === 'caema123') {
+        return {
+          token: 'mock-jwt-token-gerente',
+          user: { id: '1', name: 'Gerente CAEMA', email: 'gerente@caema.com', role: 'gerente' },
+        };
+      }
+      // Mock: Atendente
+      if (credentials.email === 'atendente@caema.com' && credentials.password === 'caema123') {
+        return {
+          token: 'mock-jwt-token-atendente',
+          user: { id: '2', name: 'Atendente CAEMA', email: 'atendente@caema.com', role: 'atendente', storeId: '1', storeName: 'Loja Centro - São Luís' },
+        };
+      }
+      throw new Error('Credenciais inválidas');
     }
-    
-    // Credenciais mockadas para teste - Atendente
-    if (credentials.email === 'atendente@caema.com' && credentials.password === 'caema123') {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      return {
-        token: 'mock-jwt-token-atendente-2024',
-        user: {
-          id: '2',
-          name: 'Atendente CAEMA',
-          email: 'atendente@caema.com',
-          role: 'atendente' as const,
-          storeId: '1',
-          storeName: 'Loja Centro - São Luís',
-        },
-      };
-    }
-    
-    // Chamada real à API
+
     const response = await api.post<LoginResponse>('/auth/login', credentials);
     return response.data;
   },
-  
+
   /**
    * POST /auth/logout
-   * Realiza o logout do usuário
    */
-  logout: () => {
+  logout: async (): Promise<void> => {
+    if (!USE_MOCK) {
+      await api.post('/auth/logout');
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
 
   /**
    * GET /auth/me
-   * Retorna os dados do usuário logado
    */
   getCurrentUser: async (): Promise<User> => {
     const response = await api.get<User>('/auth/me');
@@ -279,163 +274,73 @@ export const authService = {
 };
 
 // =============================================================================
-// SERVIÇO DE DADOS AUXILIARES (Cidades, Lojas, Atendentes)
+// SERVIÇO DE DADOS AUXILIARES
 // =============================================================================
 
 export const dataService = {
   /**
    * GET /data/cities
-   * Lista todas as cidades
    */
   getCities: async (): Promise<City[]> => {
-    try {
-      const response = await api.get<City[]>('/data/cities');
-      return response.data;
-    } catch (error) {
-      console.log('Usando dados mockados para cidades');
+    if (USE_MOCK) {
       await new Promise(resolve => setTimeout(resolve, 300));
       return mockCities;
     }
+    const response = await api.get<City[]>('/data/cities');
+    return response.data;
   },
-  
+
   /**
-   * GET /data/stores
-   * Lista todas as lojas (pode filtrar por cidade)
+   * GET /data/stores?cityId=
    */
   getStores: async (cityId?: string): Promise<Store[]> => {
-    try {
-      const response = await api.get<Store[]>('/data/stores', { params: { cityId } });
-      return response.data;
-    } catch (error) {
-      console.log('Usando dados mockados para lojas');
+    if (USE_MOCK) {
       await new Promise(resolve => setTimeout(resolve, 300));
-      return cityId ? mockStores.filter(store => store.cityId === cityId) : mockStores;
+      return cityId ? mockStores.filter(s => s.cityId === cityId) : mockStores;
     }
+    const response = await api.get<Store[]>('/data/stores', { params: { cityId } });
+    return response.data;
   },
-  
+
   /**
-   * GET /data/attendants
-   * Lista todos os atendentes (pode filtrar por loja)
+   * GET /data/attendants?storeId=
    */
   getAttendants: async (storeId?: string): Promise<Attendant[]> => {
-    try {
-      const response = await api.get<Attendant[]>('/data/attendants', { params: { storeId } });
-      return response.data;
-    } catch (error) {
-      console.log('Usando dados mockados para atendentes');
+    if (USE_MOCK) {
       await new Promise(resolve => setTimeout(resolve, 300));
       return storeId ? mockAttendants.filter(a => a.storeId === storeId) : mockAttendants;
     }
-  },
-};
-
-// =============================================================================
-// SERVIÇO DE INDICADORES
-// =============================================================================
-
-export const indicatorsService = {
-  /**
-   * GET /indicators/summary
-   * Retorna o resumo dos indicadores (TME, TMA, TMO médios)
-   */
-  getSummary: async (filters?: FilterOptions): Promise<Indicator> => {
-    const response = await api.get<Indicator>('/indicators/summary', { params: filters });
+    const response = await api.get<Attendant[]>('/data/attendants', { params: { storeId } });
     return response.data;
   },
 
   /**
-   * GET /indicators/attendants
-   * Retorna indicadores agrupados por atendente
+   * GET /data/service-types
    */
-  getAttendantIndicators: async (filters?: FilterOptions): Promise<AttendantIndicator[]> => {
-    const response = await api.get<AttendantIndicator[]>('/indicators/attendants', { params: filters });
-    return response.data;
-  },
-  
-  /**
-   * GET /indicators/stores
-   * Retorna indicadores agrupados por loja
-   */
-  getStoreIndicators: async (filters?: FilterOptions): Promise<StoreIndicator[]> => {
-    const response = await api.get<StoreIndicator[]>('/indicators/stores', { params: filters });
-    return response.data;
-  },
-  
-  /**
-   * GET /indicators/cities
-   * Retorna indicadores agrupados por cidade
-   */
-  getCityIndicators: async (filters?: FilterOptions): Promise<CityIndicator[]> => {
-    const response = await api.get<CityIndicator[]>('/indicators/cities', { params: filters });
-    return response.data;
-  },
-
-  /**
-   * GET /indicators/trend
-   * Retorna a tendência dos indicadores ao longo do tempo
-   */
-  getTrend: async (filters?: FilterOptions): Promise<{ period: string; tme: number; tma: number; tmo: number }[]> => {
-    const response = await api.get('/indicators/trend', { params: filters });
-    return response.data;
-  },
-
-  /**
-   * GET /indicators/compare
-   * Compara indicadores entre dois períodos
-   */
-  comparePeriods: async (period1Start: string, period1End: string, period2Start: string, period2End: string): Promise<{
-    period1: Indicator;
-    period2: Indicator;
-    variation: Indicator;
-  }> => {
-    const response = await api.get('/indicators/compare', {
-      params: { period1Start, period1End, period2Start, period2End }
-    });
+  getServiceTypes: async (): Promise<ServiceType[]> => {
+    if (USE_MOCK) {
+      return [
+        { id: '1', name: 'Segunda Via de Conta', isActive: true },
+        { id: '2', name: 'Ligação Nova', isActive: true },
+        { id: '3', name: 'Religação', isActive: true },
+        { id: '4', name: 'Mudança de Titularidade', isActive: true },
+        { id: '5', name: 'Negociação de Débitos', isActive: true },
+        { id: '6', name: 'Reclamação', isActive: true },
+        { id: '7', name: 'Outros', isActive: true },
+      ];
+    }
+    const response = await api.get<ServiceType[]>('/data/service-types');
     return response.data;
   },
 };
 
 // =============================================================================
-// SERVIÇO DE ATENDIMENTOS
-// =============================================================================
-
-export const attendanceService = {
-  /**
-   * GET /attendances
-   * Lista todos os atendimentos com paginação e filtros
-   */
-  getAttendances: async (
-    filters?: FilterOptions,
-    page: number = 1,
-    pageSize: number = 20
-  ): Promise<PaginatedResponse<AttendanceRecord>> => {
-    const response = await api.get<PaginatedResponse<AttendanceRecord>>('/attendances', {
-      params: { ...filters, page, pageSize }
-    });
-    return response.data;
-  },
-
-  /**
-   * GET /attendances/export
-   * Exporta atendimentos para Excel
-   */
-  exportToExcel: async (filters?: FilterOptions): Promise<Blob> => {
-    const response = await api.get('/attendances/export', {
-      params: filters,
-      responseType: 'blob'
-    });
-    return response.data;
-  },
-};
-
-// =============================================================================
-// SERVIÇO DE GUICHÊS
+// SERVIÇO DE GUICHÊS (BOOTHS)
 // =============================================================================
 
 export const boothService = {
   /**
-   * GET /booths
-   * Lista todos os guichês (pode filtrar por loja)
+   * GET /booths?storeId=
    */
   getBooths: async (storeId?: string): Promise<Booth[]> => {
     const response = await api.get<Booth[]>('/booths', { params: { storeId } });
@@ -444,7 +349,6 @@ export const boothService = {
 
   /**
    * POST /booths
-   * Cria um novo guichê
    */
   createBooth: async (storeId: string, name: string): Promise<Booth> => {
     const response = await api.post<Booth>('/booths', { storeId, name });
@@ -453,7 +357,6 @@ export const boothService = {
 
   /**
    * DELETE /booths/:id
-   * Remove um guichê
    */
   deleteBooth: async (boothId: string): Promise<void> => {
     await api.delete(`/booths/${boothId}`);
@@ -461,7 +364,6 @@ export const boothService = {
 
   /**
    * POST /booths/:id/occupy
-   * Atendente ocupa um guichê
    */
   occupyBooth: async (boothId: string): Promise<Booth> => {
     const response = await api.post<Booth>(`/booths/${boothId}/occupy`);
@@ -470,7 +372,6 @@ export const boothService = {
 
   /**
    * POST /booths/:id/leave
-   * Atendente deixa um guichê
    */
   leaveBooth: async (boothId: string): Promise<Booth> => {
     const response = await api.post<Booth>(`/booths/${boothId}/leave`);
@@ -484,8 +385,7 @@ export const boothService = {
 
 export const ticketService = {
   /**
-   * GET /tickets
-   * Lista senhas (pode filtrar por loja e status)
+   * GET /tickets?storeId=&status=
    */
   getTickets: async (storeId?: string, status?: Ticket['status']): Promise<Ticket[]> => {
     const response = await api.get<Ticket[]>('/tickets', { params: { storeId, status } });
@@ -493,8 +393,15 @@ export const ticketService = {
   },
 
   /**
-   * GET /tickets/waiting
-   * Lista senhas em espera por loja
+   * POST /tickets
+   */
+  createTicket: async (storeId: string, customerName: string, serviceType?: string): Promise<Ticket> => {
+    const response = await api.post<Ticket>('/tickets', { storeId, customerName, serviceType });
+    return response.data;
+  },
+
+  /**
+   * GET /tickets/waiting?storeId=
    */
   getWaitingTickets: async (storeId: string): Promise<Ticket[]> => {
     const response = await api.get<Ticket[]>('/tickets/waiting', { params: { storeId } });
@@ -502,8 +409,7 @@ export const ticketService = {
   },
 
   /**
-   * GET /tickets/called
-   * Lista últimas senhas chamadas (para painel TV)
+   * GET /tickets/called?storeId=&limit=
    */
   getCalledTickets: async (storeId?: string, limit: number = 10): Promise<Ticket[]> => {
     const response = await api.get<Ticket[]>('/tickets/called', { params: { storeId, limit } });
@@ -511,26 +417,15 @@ export const ticketService = {
   },
 
   /**
-   * POST /tickets
-   * Cria uma nova senha
-   */
-  createTicket: async (storeId: string, customerName: string): Promise<Ticket> => {
-    const response = await api.post<Ticket>('/tickets', { storeId, customerName });
-    return response.data;
-  },
-
-  /**
    * POST /tickets/call-next
-   * Chama a próxima senha para um guichê
    */
   callNextTicket: async (boothId: string): Promise<Ticket | null> => {
-    const response = await api.post<Ticket | null>(`/tickets/call-next`, { boothId });
+    const response = await api.post<Ticket | null>('/tickets/call-next', { boothId });
     return response.data;
   },
 
   /**
    * POST /tickets/:id/recall
-   * Rechama uma senha (incrementa contador de rechamadas)
    */
   recallTicket: async (ticketId: string): Promise<{ ticket: Ticket; noShow: boolean; nextTicket: Ticket | null }> => {
     const response = await api.post(`/tickets/${ticketId}/recall`);
@@ -539,7 +434,6 @@ export const ticketService = {
 
   /**
    * POST /tickets/:id/start-service
-   * Inicia o atendimento de uma senha
    */
   startService: async (ticketId: string): Promise<Ticket> => {
     const response = await api.post<Ticket>(`/tickets/${ticketId}/start-service`);
@@ -548,19 +442,22 @@ export const ticketService = {
 
   /**
    * POST /tickets/:id/end-service
-   * Finaliza o atendimento (com ou sem chamar próxima senha)
    */
-  endService: async (ticketId: string, callNext: boolean = true, quality?: AttendanceRecord['quality'], satisfaction?: number): Promise<{
-    completedTicket: Ticket;
-    nextTicket: Ticket | null;
-  }> => {
-    const response = await api.post(`/tickets/${ticketId}/end-service`, { callNext, quality, satisfaction });
+  endService: async (
+    ticketId: string,
+    options: {
+      callNext?: boolean;
+      serviceType?: string;
+      quality?: AttendanceRecord['quality'];
+      satisfaction?: number;
+    } = {}
+  ): Promise<{ completedTicket: Ticket; nextTicket: Ticket | null }> => {
+    const response = await api.post(`/tickets/${ticketId}/end-service`, options);
     return response.data;
   },
 
   /**
    * POST /tickets/:id/no-show
-   * Marca senha como cliente ausente
    */
   markNoShow: async (ticketId: string): Promise<Ticket> => {
     const response = await api.post<Ticket>(`/tickets/${ticketId}/no-show`);
@@ -569,13 +466,105 @@ export const ticketService = {
 };
 
 // =============================================================================
-// SERVIÇO DE PAINEL TV (WebSocket ou Polling)
+// SERVIÇO DE INDICADORES
+// =============================================================================
+
+export const indicatorsService = {
+  /**
+   * GET /indicators/summary
+   */
+  getSummary: async (filters?: FilterOptions): Promise<Indicator & { totalAttendances: number }> => {
+    const response = await api.get('/indicators/summary', { params: filters });
+    return response.data;
+  },
+
+  /**
+   * GET /indicators/attendants
+   */
+  getAttendantIndicators: async (filters?: FilterOptions): Promise<AttendantIndicator[]> => {
+    const response = await api.get<AttendantIndicator[]>('/indicators/attendants', { params: filters });
+    return response.data;
+  },
+
+  /**
+   * GET /indicators/stores
+   */
+  getStoreIndicators: async (filters?: FilterOptions): Promise<StoreIndicator[]> => {
+    const response = await api.get<StoreIndicator[]>('/indicators/stores', { params: filters });
+    return response.data;
+  },
+
+  /**
+   * GET /indicators/cities
+   */
+  getCityIndicators: async (filters?: FilterOptions): Promise<CityIndicator[]> => {
+    const response = await api.get<CityIndicator[]>('/indicators/cities', { params: filters });
+    return response.data;
+  },
+
+  /**
+   * GET /indicators/trend
+   */
+  getTrend: async (filters?: FilterOptions): Promise<{ period: string; tme: number; tma: number; tmo: number }[]> => {
+    const response = await api.get('/indicators/trend', { params: filters });
+    return response.data;
+  },
+
+  /**
+   * GET /indicators/compare
+   */
+  comparePeriods: async (
+    period1Start: string,
+    period1End: string,
+    period2Start: string,
+    period2End: string,
+    filters?: FilterOptions
+  ): Promise<{ period1: Indicator; period2: Indicator; variation: Indicator }> => {
+    const response = await api.get('/indicators/compare', {
+      params: { period1Start, period1End, period2Start, period2End, ...filters },
+    });
+    return response.data;
+  },
+};
+
+// =============================================================================
+// SERVIÇO DE ATENDIMENTOS (HISTÓRICO)
+// =============================================================================
+
+export const attendanceService = {
+  /**
+   * GET /attendances?page=&pageSize=&cityId=&storeId=&attendantId=&startDate=&endDate=
+   */
+  getAttendances: async (
+    filters?: FilterOptions,
+    page: number = 1,
+    pageSize: number = 20
+  ): Promise<PaginatedResponse<AttendanceRecord>> => {
+    const response = await api.get<PaginatedResponse<AttendanceRecord>>('/attendances', {
+      params: { ...filters, page, pageSize },
+    });
+    return response.data;
+  },
+
+  /**
+   * GET /attendances/export (retorna arquivo Excel)
+   */
+  exportToExcel: async (filters?: FilterOptions): Promise<Blob> => {
+    const response = await api.get('/attendances/export', {
+      params: filters,
+      responseType: 'blob',
+    });
+    return response.data;
+  },
+};
+
+// =============================================================================
+// SERVIÇO DO PAINEL TV (TEMPO REAL)
 // =============================================================================
 
 export const tvPanelService = {
   /**
-   * GET /tv/called-tickets
-   * Retorna senhas chamadas para exibição no painel TV
+   * GET /tv/called-tickets?storeId=
    */
   getCalledTickets: async (storeId?: string): Promise<Ticket[]> => {
     const response = await api.get<Ticket[]>('/tv/called-tickets', { params: { storeId } });
@@ -583,20 +572,41 @@ export const tvPanelService = {
   },
 
   /**
-   * Conecta ao WebSocket para atualizações em tempo real
-   * O backend deve implementar um endpoint WebSocket
+   * Conecta ao WebSocket para atualizações em tempo real do painel TV
+   * Eventos: TICKET_CALLED, TICKET_RECALLED, TICKET_STARTED
    */
-  connectWebSocket: (storeId: string, onTicketCalled: (ticket: Ticket) => void): WebSocket | null => {
+  connectWebSocket: (
+    storeId: string,
+    callbacks: {
+      onTicketCalled?: (ticket: Ticket) => void;
+      onTicketRecalled?: (ticket: Ticket) => void;
+      onTicketStarted?: (ticket: Ticket) => void;
+      onError?: (error: Event) => void;
+      onClose?: () => void;
+    }
+  ): WebSocket | null => {
     try {
       const wsUrl = API_BASE_URL.replace('http', 'ws').replace('/api', '/ws');
-      const ws = new WebSocket(`${wsUrl}/tv?storeId=${storeId}`);
-      
+      const token = localStorage.getItem('token');
+      const ws = new WebSocket(`${wsUrl}/tv?storeId=${storeId}&token=${token}`);
+
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if (data.type === 'TICKET_CALLED') {
-          onTicketCalled(data.ticket);
+        switch (data.type) {
+          case 'TICKET_CALLED':
+            callbacks.onTicketCalled?.(data.ticket);
+            break;
+          case 'TICKET_RECALLED':
+            callbacks.onTicketRecalled?.(data.ticket);
+            break;
+          case 'TICKET_STARTED':
+            callbacks.onTicketStarted?.(data.ticket);
+            break;
         }
       };
+
+      ws.onerror = (error) => callbacks.onError?.(error);
+      ws.onclose = () => callbacks.onClose?.();
 
       return ws;
     } catch (error) {

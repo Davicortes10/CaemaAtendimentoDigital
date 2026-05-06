@@ -58,7 +58,7 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
     }
   }, [selectedStore]);
 
-  useEffect(() => {
+  const handleApplyFilters = () => {
     onFilterChange({
       cityId: selectedCity,
       storeId: selectedStore,
@@ -66,7 +66,7 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
       startDate: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
       endDate: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
     });
-  }, [selectedCity, selectedStore, selectedAttendant, dateRange]);
+  };
 
   const loadCities = async () => {
     try {
@@ -100,6 +100,7 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
     setSelectedStore(undefined);
     setSelectedAttendant(undefined);
     setDateRange(undefined);
+    onFilterChange({});
   };
 
   const hasActiveFilters = selectedCity || selectedStore || selectedAttendant || dateRange;
@@ -111,12 +112,18 @@ const FilterBar = ({ onFilterChange }: FilterBarProps) => {
           <Filter className="h-5 w-5 text-primary" />
           <h3 className="font-semibold">Filtros</h3>
         </div>
-        {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={handleClearFilters}>
-            <X className="mr-2 h-4 w-4" />
-            Limpar
+        <div className="flex items-center gap-2">
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={handleClearFilters}>
+              <X className="mr-2 h-4 w-4" />
+              Limpar
+            </Button>
+          )}
+          <Button size="sm" onClick={handleApplyFilters}>
+            <Filter className="mr-2 h-4 w-4" />
+            Filtrar
           </Button>
-        )}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
